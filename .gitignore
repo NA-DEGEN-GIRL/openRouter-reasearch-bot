@@ -6,5 +6,7 @@ idea.txt
 projects/*
 !projects/geodnet/
 !projects/geodnet/**
+!projects/gte/
+!projects/gte/**
 model_search_result.txt
 .python-version
