@@ -1,0 +1,10 @@
+idea.txt
+**gpt**
+**temp**
+.env
+.venv
+projects/*
+!projects/geodnet/
+!projects/geodnet/**
+model_search_result.txt
+.python-version
