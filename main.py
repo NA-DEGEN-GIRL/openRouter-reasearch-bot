@@ -298,7 +298,7 @@ def main():
                     divider = '=' * 20
                     f.write(loc_strings["log_prompt_header"].format(divider=divider, prompt_id=prompt_id, prompt_name=prompt_name))
 
-                api_params = {"transforms": ["web_search"]}
+                api_params = {"plugins": [{"id": "web"}]}
                 if use_reasoning:
                     api_params['reasoning'] = {}
 

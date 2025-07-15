@@ -1,7 +1,7 @@
 ## project name ##
 GTE
 
-## prompt1: In-Depth Analysis and Report ##
+## prompt1: In-Depth Analysis & Reporting ##
 # reasoning
 **project info**
 GTE
@@ -18,92 +18,95 @@ GTE
   - Flow Traders, Guy Young, IMC Trading, Maven 11, Max Resnick
 Rootdata (https://www.rootdata.com/Projects/detail/GTE?k=MTQ4ODc=)
 **end of project info**
-main request: Research and analyze the project described in **project info**.
+main request: Analyze and investigate the project described in **project info**.
 
-Your Role: You are an elite crypto analyst whose goal is to help the reader make intelligent decisions, not just deliver information.
+Your role: You are not just an information provider; you are a top-tier crypto analyst whose aim is to help readers make wise, informed decisions.
 
 Instructions:
-- **Web search is required:** You MUST use your web browsing capabilities to find the latest information from reliable sources (official website, technical docs, GitHub, major media, X/Twitter, etc.).
-- **Language and term notation:**
-  1. **Default:** All explanations should be written in English, unless specifically instructed otherwise.
-  2. **English term notation:** If a technical term or proper noun appears for the first time, always include the original (acronym) in parentheses for clarity.
-  3. **Example:** Decentralized Physical Infrastructure Network (DePIN).
-  4. For repeated terms, you may write just the English term after the first full notation.
-- **Detailed analysis:** For each of the following topics, answer the guiding questions in depth and in a report format.
+- **Mandatory Web Search:** You MUST always use web search to obtain the latest information as of today from credible sources (official website, technical documentation, GitHub, major media, X/Twitter, etc.). Always ground each report in facts discoverable today.
+- **Date Statement:** At the very top of your report, you MUST clearly state the current date as:  
+  *"Date of Analysis: YYYY-MM-DD"*
+- **Language and Terminology Rules:**
+  1. Default: ALL output must be in English unless otherwise noted.
+  2. English term notation: Whenever you first introduce a technical term or proper noun, always cite the original English term and acronym in parentheses.
+  3. Format: [Translated/Explained Term] (Original English Term, Acronym)
+     - Example: Decentralized Physical Infrastructure Network (DePIN)
+  4. For recurring terms, the standard English version is sufficient after the first instance.
+- **Analysis Depth:** For each item below, answer the listed guiding questions comprehensively, section by section.
   1. **Project Overview (The Big Picture)**
-     - What is it? Define the project in a single sentence.
-     - Why is it needed? What problem does it solve and why is that important? Include realistic examples understandable to beginners.
-  2. **Technology & Mechanisms (How it Works)**
-     - How does it work? Explain the core technical mechanism step by step.
-     - Differentiation: Specifically, how is this project innovative compared to alternative approaches or competitors (e.g., speed, cost, security, decentralization, etc.)?
-     - Explain jargon: Where terms are difficult for non-experts, always offer a plain analogy.
-  3. **Tokenomics** (if applicable)
-     - Token info: Name, ticker, and main utility.
-     - Distribution: Initial allocation, total supply, inflation/deflation model, etc.
+     - What is this project, in one sentence?
+     - Why is it necessary? What problem does it solve and why is this important? Give clear, beginner-friendly examples.
+  2. **Technology & Mechanism (How it Works)**
+     - Operation: Explain the main mechanism/processes step by step.
+     - Differentiators: Which specific aspects make this project innovative versus predecessors and competitors (e.g., speed, cost, security, decentralization)?
+     - Jargon: Always explain complex terms through relatable analogies.
+  3. **Tokenomics** (if the project has a token or defined economic model)
+     - Token details: Name, ticker/symbol, main utility.
+     - Distribution: Initial allocation, total supply, inflation/deflation models if any.
   4. **Team & Investors (The People)**
-     - Key personnel: What are the team members’ backgrounds? (If missing, refer to Rootdata.)
-     - Team vision: From X (Twitter) or interviews, analyze what they emphasize and their main vision.
-     - Key investors: Who are the top funders, and why do you think they invested?
-  5. **Users and Community (For Users)**
-     - Participation: Are there apps/products users can participate in or use now? If yes, how?
-     - Airdrop potential: Are there ongoing or upcoming airdrop activities? Provide reasoning/evidence.
+     - Key personnel: What are the backgrounds and experiences of the core team? (If info is missing, supplement from Rootdata.)
+     - Team vision: Analyze what the team emphasizes/publicly states as their vision via X(Twitter) or interviews.
+     - Lead investors: Who are the most noteworthy backers? Why do you think they invested in this project?
+  5. **Users & Community (For Users)**
+     - How to participate: Are there products/apps that normal users can directly use? If so, how specifically?
+     - Airdrop potential: Are there ongoing or expected airdrop-related campaigns? What evidence or rationale is there?
   6. **Competition & Risks**
-     - Competitive landscape: What are the most direct competitors? What are GTE’s strengths and weaknesses by comparison?
-     - Potential risks: What technical, business, or market risks may GTE face?
-     - **Note:** The above sections (1-6) are templates; you may restructure, merge, or add sections for a better logical flow.
-- **Output format:** Write a detailed analytical report, matching the structure above, in English. Do NOT summarize.
+     - Competitive landscape: Who are the direct competitors, and what are GTE’s strengths and weaknesses compared to them?
+     - Potential risks: What technical, business, or market-side risks could this project face?
+  *Note:* These points are guides—not mandatory fixed sections. You may reorganize, merge, or expand them for best clarity and logic.
+- **Output Requirements:** You MUST write your output as an in-depth report addressing the questions above, in English. Summarization is forbidden.
 
 ## prompt2: Cross-Validation & Fact Sheet Generation ##
 # reasoning
 # other_ai_info
-Your role: You are the lead researcher responsible for fact-checking and synthesizing all information.
+Your role: You are the lead fact-checker and integrator.
 
 Instructions:
-1. Review all data: Carefully review your own findings and those provided by other AIs in the previous step.
-2. Produce a Master Fact Sheet: Integrate all information into a single, comprehensive, fully fact-checked 'Master Fact Sheet'.
-   - Correct errors: Where there are contradictions, verify with web search and use only the most accurate information.
-   - Enrich content: Add valuable new data, insights, or arguments that other AI responses may have provided.
-3. Before presenting the Master Fact Sheet, briefly bullet major changes you made. (e.g., "- Corrected total token supply based on official docs," "- Added details on consensus mechanism from AI B’s answer.")
-4. Output: First, the list of changes; second, the completed Master Fact Sheet.
+1. Review all information: Carefully verify your prior findings and all research provided by other AIs.
+2. Master Fact Sheet: Your goal is to create a comprehensive, fully fact-checked "Master Fact Sheet" integrating all data.
+    - Correct all discrepancies: Whenever there’s conflicting info, you MUST use web search to determine the accurate facts and adopt only the best-sourced info.
+    - Enrich your content: Add any unique value points from other AI responses that you initially missed.
+3. Change Log: Before outputting the final Master Fact Sheet, list the principal changes you made in concise bullet points (e.g., "- Updated total supply based on official docs", "- Incorporated consensus details from AI B").
+4. Output: List the changes first, then output the full Master Fact Sheet.
 
 ## prompt3: Red Team Critical Analysis ##
 # reasoning
-Your role: Now, act as a skeptical investor and provide a "Red Team" critical analysis. Omit the positives and focus only on weaknesses, risks, or suspicious elements.
+Your role: You are now acting as a highly skeptical investor—your job is to provide a "Red Team" critique. Disregard positive points; focus solely on weaknesses, risks, and any suspicious elements.
 
 Instructions:
-1. Maintain a critical perspective. Based on the Master Fact Sheet, answer the following, being as critical as possible:
-   - Hype?: Is this project truly innovative or just a minor variation of existing tech? What lies behind the buzzwords/marketing language?
-   - Unsustainable Tokenomics?: Is token allocation overly favorable to the team or early investors? Is there a sound model for maintaining long-term value?
-   - Is the team's competence proven?: Are team backgrounds truly relevant? Is there evidence they can deliver on the roadmap?
-   - Red Flags: What must any investor know? Any hidden risks? (e.g., vague roadmap, inactive community, intense competition, etc.)
-2. Output: Write a detailed, logically argued critical report answering these.
-3. Actively validate your criticisms via credible web sources as evidence.
+1. Maintain a critical viewpoint: Based on the Master Fact Sheet, answer the following:
+   - Hype?: Is this technology truly groundbreaking, or just a mild iteration of past ideas? What’s really behind the marketing?
+   - Unsustainable tokenomics?: Is the token allocation unfairly slanted towards team/early investors? Is there a clear, sustainable long-term value model?
+   - Team capabilities?: Are team backgrounds genuinely relevant? Is there proof they can execute their roadmap?
+   - Red Flags: As an investor, what are the must-know warning signs? Any hidden/critical risks? (e.g., vague roadmap, weak community, excessive competition, etc.)
+2. Output: Write a detailed, logically argued Red Team analysis covering the above.
+3. You must support your critiques with credible web sources as evidence.
 
-## prompt4: Red Team Synthesis & Final Critical Report ##
+## prompt4: Synthesis & Final Red Team Critical Report ##
 # reasoning
 # other_ai_info
-Your role: Synthesize all critical analyses (from you and other AIs), and produce the sharpest, most logically sound final conclusion as the chief Red Team analyst.
+Your role: Synthesize all Red Team reports (from you + other AIs) into the sharpest, most objectively reasoned final conclusion.
 
 Instructions:
-1. Review only critical perspectives: Carefully review all Red Team critiques (your own and others’) from the previous step. (Do NOT reference the positive Master Fact Sheet in this step.)
-2. Produce the final critical report: Merge all critiques into a single, fact-checked 'Final Critical Report'.
-    - Core risks: Identify key recurring risks, and highlight them.
-    - Enrich the logic: Where another AI’s critique adds a valid point, integrate it to reinforce the argument.
-    - Remove duplicates: Merge or eliminate overlapping points for conciseness.
-3. Change Log: Before the final report, briefly summarize any significant changes you made by incorporating others’ input.
-4. Output: First, the change summary; second, the completed Final Critical Report.
+1. Consider ONLY critical (negative) analyses: Thoroughly review all Red Team critiques from step 3. Ignore positive data from step 2 for this step.
+2. Write the Final Red Team Report by merging all relevant criticisms into one coherent, fact-checked document.
+   - Identify and highlight the core risks that are mentioned by multiple sources.
+   - Strengthen logic by adding valid points from other AI critiques.
+   - Merge/condense duplicates for clarity.
+3. Before output, list major changes added from other AI critiques.
+4. Output: List changes, then output the finalized report.
 
-## prompt5: Structured Data (JSON) Extraction (with Strengths/Weaknesses) ##
+## prompt5: Structured Data (JSON Extraction with Full Preservation of Strengths & Weaknesses) ##
 # reasoning
-Your role: You are a data specialist integrating the "positive facts" (prompt2) and "critical analysis" (prompt4) to compose a balanced dataset.
+Your role: Combine positive facts (step 2) and negative Red Team analyses (step 4) to produce a well-balanced dataset.
 
 Instructions:
-1. Aggregate information: Combine the Master Fact Sheet (prompt2 result) and Final Critical Report (prompt4 result) to provide a comprehensive evaluation of strengths, weaknesses, opportunities, and threats. Fill in the JSON template below.
-2. Data preservation: This JSON becomes the definitive single source for further reports. Never summarize, but preserve the original explanations, full sentences, and important nuances in each field.
-3. Balanced judgment: Let your output reflect the *real* weighting of pros/cons. If positive points are 90%, reflect that; don't force artificial 50:50 parity. *Do not state explicit ratio.* 
-4. Schema flexibility: The template below is a checklist; freely add new fields/keys as warranted by the project.
-5. For any missing data, fields should be set to `null` or left empty.
-6. Output: Only print the JSON code block. No additional text.
+1. Aggregate all information: Merge the Master Fact Sheet and Final Critical Report. Evaluate strengths, weaknesses, opportunities, and risks and fill out the JSON template below.
+2. Preservation Rule: This JSON is your definitive single source for any further output. Do NOT summarize—transfer all important explanations and critical sentences/narratives verbatim.
+3. Your output should proportionally represent the real strengths/risks ratio of the data. If positive is 90%, show that; do NOT try to artificially balance it. *Never state or imply an explicit percentage.*
+4. If a project-specific key/section is missing, you may add more keys beyond the template.
+5. Set any missing value to `null` or empty.
+6. Output: ONLY the JSON code block, no explanations.
 
 JSON Template:
 {
@@ -112,7 +115,7 @@ JSON Template:
   "tags": [],
   "overview": {
     "summary": "",
-    "details": ""  // Full description, examples, nuance
+    "details": ""  // full detail, examples, and nuance
   },
   "strengths": [
     { "point": "", "details": "" }
@@ -138,10 +141,10 @@ JSON Template:
   "investors": [
     {
       "name": "",
-      "type": "",       // VC, Angel, Corporate, etc. ('Other' allowed)
-      "tier": "",       // If unknown: null or 'estimated'
-      "description": "",// E.g. known funding, seed/series, reputation/notes
-      "details": ""     // When supported: investment date, strategic/pure, links
+      "type": "",       // VC, Angel, Corporate, etc. (Other allowed)
+      "tier": "",       // null or 'estimated' if unknown
+      "description": "",// e.g. capital, round, notability
+      "details": ""     // e.g. time of support, strategic/type, links
     }
   ],
   "userActions": {
@@ -160,100 +163,96 @@ JSON Template:
   ]
 }
 
-## prompt6: JSON Data Merging & Finalization ##
+## prompt6: Merging JSON Data for Finalization ##
 # reasoning
 # other_ai_info
-Your role: As the lead data architect, integrate all data sources into a final Single Source of Truth.
+Your role: As the lead data architect, merge all JSONs into the single, finalized Single Source of Truth.
 
 Instructions:
-1. Merge all JSONs produced by you and other AIs into the single, most complete and accurate final JSON.
+1. Merge all your and other AIs' JSONs into the single most complete and accurate data object.
 2. Rules:
-   - Expand structure: If another AI added useful new keys, include them.
-   - Merge and enrich: Combine all contents for the same key/field—don't just pick or summarize. E.g., if some AIs cover aspect A of the tech and others aspect B, both must be present.
-   - Depth preservation: When merging, always synthesize into a detailed and complete final version.
-3. Output: Output a single merged final JSON code block—do not add any other text.
+   - Expand schema: If another AI added useful keys, include them.
+   - Merge/enrich: For each key, aggregate and enrich all values; do NOT just select or summarize. Both A & B aspects must be preserved if different AIs contributed them.
+   - DO NOT lose important detail.
+3. Output: Output ONLY the final merged JSON code block.
 
-## prompt7: Final Output Generation (3 Styles) ##
+## prompt7: Final Output Generation (3 Output Styles) ##
 # reasoning
-Your role: You are a master content creator, able to produce outputs in a range of styles for different scenarios.
+Your role: As an all-round content creator, your task is to generate three distinctive output formats.
 
 Instructions:
-1. You MUST USE ONLY the finalized JSON from the previous step as your source. DO NOT infer, speculate, or add any information that isn't in the JSON.
-2. Produce all three outputs in order, according to the instructions below.
-3. **Language and notation guidelines:**
-   - All outputs must be written in English.
-   - When technical/proper terms appear for the first time, include the original or acronym in parentheses. You may later refer to them with just the standard English term.
-   - Use format: Explained term (Original Term, Acronym)
-   - Ex: Decentralized Physical Infrastructure Network (DePIN)
+1. Only use the finalized JSON above; do NOT invent, speculate, or add material not present in the JSON.
+2. Produce the three outputs below, sequentially.
+3. **Language and terminology guidelines:**
+   - English output only.
+   - When introducing technical/proper nouns, always provide the original term/acronym in parentheses at first use. Subsequent mentions can use the normal English.
+   - Example: Decentralized Physical Infrastructure Network (DePIN)
 
 ---
 
 [Output 1: Detailed Analytical Report]
+Using the JSON data, write a professional, well-structured, and highly readable full analysis report by following these rules:
 
-Using the JSON data, write a professional, readable, and highly structured in-depth report according to the following rules:
-
-Rules:
-- **Structure for readability:** Use headings (###), subheadings (**), bullet points (-), and divide text into clear paragraphs. Do NOT write long unbroken text blocks.
-- **Synthesize information:** For each section, merge related points into a unified narrative. Avoid repeating the same content in multiple places.
-- **Objective voice:** Do NOT use first-person perspective (e.g., "I think..."). Maintain an objective analyst's tone.
-- **Balanced perspective:** Cover both strengths and weaknesses as they truly exist (not forced 50:50). Let the actual weighting in the project data be reflected, not arbitrary symmetry.
-- **Flexible structure:** Organize/report the structure and sections in the way you judge most effective for communication.
+Rules & Format:
+- **Focus on readability (mandatory):** Use Markdown headings (###), subheadings (**), bullet points (-), and always divide content into clear paragraphs for maximal clarity. NEVER output uninterrupted massive walls of text.
+- **Synthesize information:** For each section, synthesize all related info into a single, coherent explanation, and avoid repeat content across sections.
+- **Objective style:** Do NOT use first-person phrasing (e.g., "I think..."). Maintain an objective, analytical voice at all times.
+- **Balanced perspective:** Give both strengths and weaknesses as reflected in the data, but do NOT force 50:50 parity. Let the genuine pros/cons ratio reflect reality.
+- **Flexible sectioning:** Organize the overall structure and section order in whatever way you judge to be most effective.
 
 ---
 
 [Output 2: Telegram Summary Report]
 
 Instructions:
-- Use the following format only as inspiration/influence—adapt section titles and arrangement as best fits the project.
-- Your summary MUST be a genuinely balanced analysis (strengths & weaknesses).
+- Use the following format as inspiration (do not treat it as mandatory). Modify, add, or remove sections to best suit the project.
+- The summary MUST deliver a truly balanced view (both key strengths and weaknesses).
 
 Example format:
 [Project Name]
-[One-liner or tagline about the project]
+[Concise one-liner or tagline]
 ✨ Key Summary
-Problem: The key market pain point this project targets.
-Solution: The distinctive technical approach.
-Investment point: Why should people pay close attention to this project now?
+Problem: Major market pain point solved.
+Solution: Distinctive technical/architecture approach.
+Investment Point: Why is this project interesting now?
 
 💻 What is [Project Name]?
-Explain the project's core identity and goals accessibly. Use analogies/examples that even newcomers will understand.
+Plain English intro to project identity and purpose—with one or more beginner-friendly analogies/examples.
 
-🔧 How does the core technology work?
-Explain the most important technology (e.g., decentralized storage, real-time validation) step by step.
-E.g.: Step 1: Data collection → Step 2: Data validation → Step 3: Rewards.
+🔧 Core Technology—How does it work?
+Clear, step-wise explanation for major technical innovations.
+(E.g., Step 1: Data collection → Step 2: Data validation → Step 3: Reward)
 
 🔗 Tokenomics: $TOKEN
-Clearly specify token utility: governance, payments, staking, etc.
-Outline distribution structure: team, investors, community, etc.
+Token's utility and distribution explained.
 
 💸 User actions & airdrop outlook
-Guide concretely on app participation, node operation, etc.
-Assess airdrop potential (High/Medium/Low) and explain with evidence (token status, investor type, case studies, etc.)
+Guide on how users can use apps, run nodes, participate, etc.
+Airdrop assessment: Grade as High/Medium/Low with clear justification.
 
-👥 Team & investors: Who built and funded the project?
-Highlight credentials of notable team members & key investors.
+👥 Team & Investors
+Highlight major team credentials and leading investors.
 
 ⚠️ Risks & opportunities
-Objectively analyze strengths and weaknesses vs similar projects.
-Call out key risk factors.
+Fairly weigh strengths vs. weaknesses and call out key risks.
 
-🤝 Key term explanations
-DePIN: Decentralized Physical Infrastructure Network—a method of operating physical infrastructure with blockchain.
-RTK: Real-Time Kinematic—satellite error correction for centimeter-level accuracy.
+🤝 Glossary for Key Terms
+DePIN: Decentralized Physical Infrastructure Network—operating physical infra on blockchain.
+RTK: Real-time satellite correction for cm-level precision.
 
 🧨 One-line verdict
-Sum up the project in a single sentence.
+Conclude the entire report in a single, powerful sentence.
 
-Note: Structure can and should be adapted per the project, and when clear weaknesses or gaps are present, include them.
+Note: Sections and order can/should be adapted freely per project, and any detected weaknesses or missing points must always be included.
 
 ---
 
-[Output 3: Promotional Tweets (10 total)]
+[Output 3: Promotional Tweets (Total: 10 — 5 Korean, 5 English)]
 
 Instructions:
-- Write 5 Korean and 5 English tweets to promote the greatest strengths and appeal of the project.
+- Write five Korean and five English tweets promoting the project's main strengths and attractiveness.
 - Rules:
-    - Each tweet should be about a different point—avoid repetition.
+    - Each tweet must focus on a unique appeal, avoid redundancy.
     - Do NOT use hashtags (#) or emojis.
-    - The project's official X (Twitter) handle (e.g., @GTE_xyz) must appear in each tweet.
-    - Tweets should have as much information as possible within the character limit, and be clear/readable.
+    - Official project Twitter handle (e.g., @GTE_xyz) must appear in every tweet.
+    - Write informative, readable content within Twitter's character limit.

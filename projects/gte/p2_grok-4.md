@@ -1,62 +1,50 @@
 ### 변경사항 요약
-- **프로젝트 아이덴티티 오류 수정**: Gemini 응답에서 GTE를 Ethena(합성 달러 프로토콜)로 착각한 내용을 완전히 배제하고, GTE를 주문장 기반 탈중앙화 거래소(Order Book DEX)로 재확인함. 웹 검색(2024년 10월 기준, gte.xyz 웹사이트와 Rootdata 페이지 확인) 결과, gte.xyz는 Ethena.fi로 리디렉션되지 않으며, Ethena는 별도의 프로젝트(ethena.fi)임. GTE의 태그(DeFi, DEX, OrderBook DEX)와 투자자 목록(Paradigm 등)이 Ethena와 일부 유사하지만, 이는 우연의 일치로 보이며 프로젝트 본질이 다름.
-- **기술 메커니즘 보강**: GPT-4.1의 응답에서 언급된 zkRollup(영지식 롤업) 및 고성능 매칭 엔진 세부 사항을 추가하여 내 원래 응답의 하이브리드 모델 설명을 강화함. 웹 검색(The Block 기사, 2024년 8월)으로 zkRollup 활용 가능성 확인.
-- **토크노믹스 업데이트**: GPT-4.1과 Gemini의 미공개/추정 정보를 바탕으로, 내 응답의 추정 공급량(10억 개)을 유지하되, Gemini의 Ethena 토큰(USDe/ENA) 정보를 배제하고 GTE 토큰($GTE)의 유틸리티를 더 구체화함. 웹 검색(X 포스트, 2024년 9월)으로 토큰 출시 전 상태 재확인.
-- **팀 및 투자자 세부 추가**: Gemini 응답의 Guy Young 경력(금융 배경)과 Arthur Hayes 언급을 GTE 맥락으로 재해석하여 추가(웹 검색: LinkedIn과 Rootdata 확인). GPT-4.1의 비전 슬로건("Trading for the Onchain Future")을 통합.
-- **사용자 참여 및 에어드랍 보강**: GPT-4.1의 Waitlist 등록과 테스트넷 참여 세부를 추가하여 내 응답을 확장. 에어드랍 가능성을 70%에서 높음으로 상향 조정(GPT-4.1의 "높은 가능성" 근거 채택). Gemini의 Ethena 에어드랍(Shard/Sats Campaign)은 무관하므로 배제.
-- **경쟁 및 리스크 확장**: GPT-4.1의 경쟁자(dYdX, Orderly Network)와 리스크(확장성-보안성 트레이드오프)를 추가하여 내 응답을 보강. Gemini의 Ethena 리스크(펀딩비 리스크 등)는 무관하므로 배제.
-- **전반적 사실 확인 및 중복 제거**: 상충 정보(예: 총 투자액 $25M 일관됨)를 웹 검색(Rootdata, Paradigm 포트폴리오)으로 검증. 불확실한 추정은 명시적으로 표시하여 정확성 강조.
+- **투자액 및 라운드 세부 조정**: 원래 프로젝트 정보와 내 이전 응답에서 총 $25M으로 명시되었으나, 웹 검색 결과(ChainCatcher, The Block, CoinDesk)를 통해 확인된 바에 따라, Pre-Seed $1.5M, Seed $6.942M, Community Funding $2.5M (총 이전 $10.942M) + Series A $15M로 총 $25.942M으로 수정. 이는 근사치 $25M과 일치하나 세부 내역을 보강.
+- **팀 정보 보강**: 내 이전 응답과 gpt-4.1에서 팀 정보가 제한적이라고 했으나, gemini-2.5-pro의 분석을 참고하여 비전(실시간 탈중앙화 UX 강조)과 Rootdata 기반 배경(DeFi/트레이딩 전문가)을 더 명확히 통합. 추가 웹 검색으로 팀 공개 부족 확인, 추정치로 유지.
+- **토크노믹스 추가**: 내 이전 응답에서 토큰 미발행으로 결론지었으나, gemini-2.5-pro의 예상 유틸리티(거버넌스, 수수료 할인)를 추가 보강. 웹 검색(ChainCatcher)으로 토큰 관련 공식 발표 없음 확인.
+- **에어드랍 가능성 강화**: gpt-4.1과 gemini-2.5-pro의 에어드랍 추정 근거(Echo 펀딩, Paradigm 패턴, 경쟁자 사례)를 통합하여 더 구체적으로 보강. 웹 검색(The Block)으로 Echo의 커뮤니티 펀딩 $2.5M 확인.
+- **경쟁 및 리스크 확장**: gemini-2.5-pro의 세부 강점(유동성 통합, end-to-end 탈중앙화)과 리스크(MegaETH 의존성)를 추가. gpt-4.1의 CEX급 성능 리스크를 통합. 웹 검색(CoinDesk)으로 HyperLiquid 거래량 $1T+ 확인.
+- **기술 설명 통합 및 오류 수정**: 내 이전 응답의 단계별 작동에 gpt-4.1의 "실시간 체결, API 거래"와 gemini-2.5-pro의 "Stateful 애플리케이션"을 추가. 상충점 없음, 웹 검색(gte.xyz)으로 Non-Custodial 및 CEX-level speed 확인.
+- **전체 보강**: 다른 AI들의 초보자 비유(렉, 은행 금고)와 예시(FTX 사태)를 통합하여 설명을 더 풍부하게 함. 총 투자액 근사치 외에 새로운 가치(예: 테스트넷 사용자 70만, Panews 기사)를 추가.
 
 ### 마스터 팩트 시트: GTE 프로젝트 통합 사실 요약
-
-이 마스터 팩트 시트는 내 이전 응답, GPT-4.1 응답, Gemini 응답을 종합하고 웹 검색(공식 웹사이트 gte.xyz, X @gte_xyz, Rootdata, The Block, CoinDesk, LinkedIn 등)을 통해 사실 확인된 최신 정보(2024년 10월 기준)를 기반으로 작성되었습니다. GTE는 아직 베타 단계의 초기 프로젝트로, 일부 정보(예: 토큰 세부 사항)는 미공개 상태입니다. 섹션은 원래 분석 구조를 따르되, 통합된 포괄적 형식으로 제시합니다.
+이 마스터 팩트 시트는 2025년 7월 15일 기준 웹 검색(gte.xyz, CoinDesk, ChainCatcher, CoinCentral, The Block, Panews 등)과 이전 응답들을 종합하여 사실 확인된 정보를 바탕으로 작성되었습니다. 섹션은 원래 보고서 구조를 기반으로 하며, 상충 정보는 가장 신뢰할 수 있는 출처(공식 사이트 및 주요 미디어)로 수정됨.
 
 #### 1. 프로젝트 개요 (The Big Picture)
-- **정의**: GTE는 주문장 기반 탈중앙화 거래소(Order Book Decentralized Exchange, Order Book DEX)로, 중앙화 거래소(CEX) 수준의 거래 경험을 탈중앙 금융(DeFi) 환경에서 제공하는 플랫폼입니다.
-- **필요성 및 문제 해결**: DeFi의 대부분 DEX가 자동 시장 조성자(Automated Market Maker, AMM) 모델을 사용해 가격 슬리피지와 효율성 문제를 초래하나, GTE는 주문장 모델로 이를 해결합니다. 예를 들어, AMM 기반 DEX(예: Uniswap)에서 대규모 거래 시 가격 변동으로 손실이 발생하지만, GTE는 실시간 주문 매칭으로 정교한 거래를 가능하게 하며, 탈중앙성을 유지합니다. 이는 DeFi 대중화의 장벽을 낮춰 금융 포용성을 높입니다. 중앙화 거래소(예: Binance)의 해킹 리스크를 피하면서도 비슷한 속도와 UI/UX를 제공하는 것이 핵심 가치입니다.
-- **현재 상태**: 베타 테스트 중(테스트넷 운영), 메인넷 출시 예정(2025년 추정). 총 투자액: $25,000,000.
+- **정의**: GTE는 MegaETH 블록체인 기반의 탈중앙화 거래소 (Decentralized Exchange, DEX)로, 중앙 한도 주문장 (Central Limit Order Book, CLOB) 모델을 활용해 CEX 수준의 실시간 속도와 비커스터디얼 (Non-Custodial) 보안을 결합한 "세계에서 가장 빠른 탈중앙화 거래 플랫폼"입니다. [gte.xyz](https://www.gte.xyz/)
+- **필요성 및 문제 해결**: 기존 DEX의 지연, 비용, 유동성 파편화와 CEX의 위탁 리스크(예: FTX 파산으로 인한 자산 손실)를 해결. 초보자 예시: 온라인 게임 '렉'처럼 지연으로 거래 기회를 놓치는 문제를 없애고, "내 지갑에 돈을 맡기지 않고 은행처럼 안전하게 거래"하는 환경 제공. 이는 DeFi 성장에 필수적이며, HyperLiquid의 $1T+ 거래량 사례처럼 시장 수요 증명됨. [coindesk.com](https://www.coindesk.com/business/2025/06/23/hyperliquid-rival-gte-raises-usd15m-in-series-a-led-by-paradigm), [panewslab.com](https://www.panewslab.com/zh/articles/narws099)
 
 #### 2. 기술 및 메커니즘 (How it Works)
-- **작동 방식 (단계별)**:
-  1. **주문 등록**: 사용자가 지갑(예: MetaMask)으로 매수/매도 주문을 입력, 블록체인(이더리움 기반)에 기록되어 주문장(Order Book)에 업데이트.
-  2. **주문 매칭**: 오프체인 컴퓨팅으로 고속 매칭 후 온체인 정산. zkRollup(영지식 롤업) 또는 유사 Layer 2 솔루션으로 속도 최적화.
-  3. **거래 실행 및 정산**: 스마트 컨트랙트로 자산 이전, 탈중앙화 클리어링(Decentralized Clearing) 적용.
-  4. **유동성 제공**: 시장 조성자(Market Makers)가 참여, 크로스체인 유동성 집계(Aggregation)로 효율성 극대화.
-- **차별점 및 혁신**:
-  - 기존 AMM DEX(예: Uniswap) 대비 정확한 가격 발견과 낮은 슬리피지(0.1% 이내 목표).
-  - CEX 수준 속도(초당 1,000 TPS)와 비용 절감(가스비 90% 감소), 완전 온체인 주문장으로 진정한 탈중앙성 구현.
-  - zkRollup 활용으로 고성능 매칭 엔진 제공, 다중 체인 유동성 통합으로 단일 DEX 한계 극복.
-- **기술 용어 해설**:
-  - 주문장(Order Book): 매수/매도 주문이 가격별로 나열된 '장부'나 '전자게시판' (비유: 카페 주문 대기판).
-  - 슬리피지(Slippage): 예상 가격과 실제 가격 차이 (비유: 시장에서 물건 사려다 가격이 갑자기 오르는 상황).
-  - zkRollup: 거래를 합쳐 데이터 양 줄이고 보안 유지하는 Layer 2 기술 (비유: 여러 편지를 하나의 상자로 압축해 보내는 방식).
-  - 델타 중립 헤징(Delta-Neutral Hedging): 가격 변동 무관 안정성 유지 (비유: 양쪽 팀에 균형 있게 베팅해 손실 피함) – GTE에 직접 적용되지 않으나, 유사 프로젝트 참고로 추가.
+- **작동 방식 (단계별)**: 
+  1. 사용자가 지갑(예: MetaMask) 연결. 
+  2. CLOB 모델로 매수/매도 주문 제출 (가격/수량 지정). 
+  3. MegaETH의 고성능 인프라로 실시간 매칭/실행 (지연 제로, API 지원). 
+  4. 온체인 정산, 자산은 사용자 지갑에 유지 (end-to-end 탈중앙화). MegaETH는 Stateful 애플리케이션(실시간 데이터 변화 처리)에 최적화됨. [gte.xyz](https://www.gte.xyz/), [coincentral.com](https://coincentral.com/paradigm-backs-gte-with-15m-to-build-the-fastest-decentralized-exchange/)
+- **차별점**: 기존 DEX(AMM 기반, 예: Uniswap) 대비 CLOB로 정확한 가격 형성, CEX(예: Binance) 대비 비커스터디얼 보안. 혁신: 속도(제로 지연), 통합 유동성(파편화 방지), 완전 온체인 처리. 경쟁자(HyperLiquid)보다 MegaETH 특화로 낮은 지연 목표. [coindesk.com](https://www.coindesk.com/business/2025/06/23/hyperliquid-rival-gte-raises-usd15m-in-series-a-led-by-paradigm)
+- **용어 해설**: 
+  - CLOB: 레스토랑 메뉴판처럼 주문을 가격별로 모아 매칭 (AMM처럼 자동 풀 대신). 
+  - Non-Custodial: 은행에 돈 맡기지 않고 직접 금고 관리하는 비유. 
+  - Latency: 게임 '렉'처럼 지연으로 손실 발생.
 
 #### 3. 토크노믹스 (Tokenomics)
-- **토큰 정보**: 이름: GTE (티커: $GTE). 주요 유틸리티: 거래 수수료 할인, 거버넌스 투표, 스테이킹 보상, 인센티브/리워드 운영. 아직 공식 출시 전(메인넷 런칭 시 예상).
-- **분배 구조**: 총 공급량: 10억 개 추정(확정 미공개). 초기 분배: 팀 20%, 투자자 30%, 커뮤니티/에어드랍 40%, 유동성 예비 10% (DeFi 표준 모델 기반 추정). 인플레이션/디플레이션: 스테이킹 보상으로 약간 인플레이션, 수수료 소각으로 디플레이션 요소. 구체적 구조는 토크노믹스 문서 공개 시 확인 필요.
+- **토큰 정보**: 아직 공식 토큰 미발행 (이름, 티커 미정). 예상 유틸리티: 거버넌스(정책 투표), 수수료 할인/분배, 인센티브(유동성 공급 보상). [chaincatcher.com](https://www.chaincatcher.com/article/2187586)
+- **분배 구조**: 초기 분배/총 공급량/인플레이션 모델 미공개. 미래 토큰 발행 시 DeFi 패턴(예: DYDX) 따라 사용자 인센티브 중심 전망. 웹 검색으로 확인된 바 없음.
 
 #### 4. 팀 및 투자자 (The People)
-- **핵심 인물**: 
-  - Guy Young (창립자/CEO): IMC Trading 출신 고빈도 트레이딩 전문가, Maven 11 연결. 20년 금융 경력(전통 금융 배경).
-  - Max Resnick (엔지니어링 리드): 이더리움 재단 경험, 스마트 컨트랙트 보안 전문.
-  - 팀 규모: 10-15명, 대부분 트레이딩 회사(Wintermute, Flow Traders) 출신. 정보 비공개 기조이나 Rootdata/LinkedIn으로 확인.
-- **팀의 비전**: X 포스트와 인터뷰(The Block, 2024년 8월)에서 "중앙화 효율성과 탈중앙 자유 결합" 강조. 슬로건: "Trading for the Onchain Future." DeFi를 CEX 수준으로 업그레이드하며, 블록체인 기반 프로페셔널 트레이딩 인프라 비전. Arthur Hayes(BitMEX 창립자) 지지 언급됨.
-- **핵심 투자자**:
-  - Tier 1: Paradigm (DeFi 인프라 혁신 집중, GTE의 Order Book 잠재력 인정).
-  - Tier 2: Robot Ventures (DeFi 조기 투자), Wintermute (트레이딩 특화, 전략적 파트너십).
-  - 기타: Flow Traders, Guy Young, IMC Trading, Maven 11, Max Resnick. 투자 이유: AMM 한계 극복과 기관급 DeFi 시장 잠재력.
+- **핵심 인물**: 팀 정보 공개 제한적. Rootdata 기준 DeFi/트레이딩 전문가 구성, MegaETH 생태계 배경. [rootdata.com](https://www.rootdata.com/Projects/detail/GTE?k=MTQ4ODc=)
+- **팀 비전**: X(@gte_xyz)와 인터뷰에서 "제로 지연 실시간 거래, CEX 속도 + DeFi 보안, 사용자 경험 혁신" 강조. CEX 대체 목표. [coincentral.com](https://coincentral.com/paradigm-backs-gte-with-15m-to-build-the-fastest-decentralized-exchange/)
+- **핵심 투자자**: 
+  - Tier 1: Paradigm (Series A $15M 리드) - DeFi 혁신 잠재력 인정 (Uniswap 등 과거 사례). 
+  - Tier 2: Robot Ventures, Wintermute (마켓 메이킹 전문). 
+  - 기타: Flow Traders, Guy Young, IMC Trading, Maven 11, Max Resnick, Foresight Ventures, Echo (커뮤니티 펀딩 $2.5M). 총액: 약 $25M (Pre-Seed $1.5M + Seed $6.942M + Community $2.5M + Series A $15M). Paradigm의 투자 이유: 고속 DeFi 시장 지배력. [coindesk.com](https://www.coindesk.com/business/2025/06/23/hyperliquid-rival-gte-raises-usd15m-in-series-a-led-by-paradigm), [chaincatcher.com](https://www.chaincatcher.com/article/2187586), [theblock.co](https://www.theblock.co/post/335132/megaeth-based-dex-gte-funding-cobie-echo)
 
 #### 5. 사용자 및 커뮤니티 (For Users)
-- **참여 방법**: 베타 앱(웹사이트 gte.xyz)에서 지갑 연결 후 테스트넷 거래(모의 자산 사용). Waitlist 등록으로 알파/베타 테스트 우선권. Discord 커뮤니티 참여로 피드백 보상(포인트 시스템). X 팔로워: 10,000명 이상, 활발한 Crypto Twitter(CT) 활동.
-- **에어드랍 가능성**: 높은 가능성(테스트넷 참여자 대상 $GTE 에어드랍 예상). 근거: X 포스트(2024년 9월)와 Galxe-style 포인트 시스템, 유사 프로젝트 패턴. 현재 진행 중 없으나, 메인넷 런칭 시 기여 기반 에어드랍 유력. 참여 추천: 테스트넷 활동 및 Waitlist 등록.
+- **참여 방법**: 베타/테스트넷 단계. 웹사이트에서 지갑 연결 후 주문 테스트 (스팟 거래, API). 테스트넷 사용자 약 70만 명. X 팔로우, 향후 Discord/Telegram 참여 권장. [gte.xyz](https://www.gte.xyz/), [panewslab.com](https://www.panewslab.com/zh/articles/narws099)
+- **에어드랍 가능성**: 진행 중 없음, 하지만 높음. 근거: Echo 커뮤니티 펀딩 ($2.5M), Paradigm 프로젝트 패턴(Blur 등 에어드랍), 경쟁자(HyperLiquid) 포인트 프로그램 사례, 초기 사용자/테스트넷 활동 보상 예상. [theblock.co](https://www.theblock.co/post/335132/megaeth-based-dex-gte-funding-cobie-echo), [chaincatcher.com](https://www.chaincatcher.com/article/2187586)
 
 #### 6. 경쟁 및 리스크 (Competition & Risks)
-- **경쟁 구도**:
-  - 직접 경쟁자: dYdX (Layer 2 Order Book DEX), Orderly Network/Vertex Protocol (탈중앙 매칭 엔진), Injective Protocol (고성능 프레임워크), Perpetual Protocol (영구 선물 중심).
-  - 강점: zkRollup 기반 고성능, 멀티체인 지원, 강력 투자자 네트워크(Paradigm 등)로 유동성 우위.
-  - 약점: 출시 전 상태로 유동성/사용자 기반 부족, dYdX의 검증된 트랙 레코드에 비해 시간 필요.
-- **잠재적 리스크**:
-  - 기술적: 오프체인 요소로 인한 부분 중앙화/해킹, Layer 2 지연(확장성-보안성 트레이드오프).
-  - 사업적: 메인넷 지연, 마케팅 부족으로 사용자 이탈, 초기 분배 불균형으로 토큰 덤핑.
-  - 시장적: 크립토 시장 하락 시 거래량 감소, 규제(SEC DEX 규제) 및 투자자 철수 가능성. 프로젝트 초기 단계로 구현 리스크 높음.
+- **경쟁 구도**: 직접 경쟁: HyperLiquid (거래량 $1T+, 유사 CLOB/고속). GTE 강점: MegaETH 특화 속도, end-to-end 탈중앙화, 투자자 네트워크. 약점: 후발주자, 유동성 구축 과제. 기타: dYdX, Aevo, Vertex (주문서 DEX), Uniswap (AMM). [coindesk.com](https://www.coindesk.com/business/2025/06/23/hyperliquid-rival-gte-raises-usd15m-in-series-a-led-by-paradigm)
+- **잠재적 리스크**: 
+  - 기술: MegaETH 의존성 (과부하/버그), CEX급 속도 미달성. 
+  - 사업: 규제 변화 (SEC 등), 토큰 미발행 불확실성, 시장 선점 실패. 
+  - 시장: 변동성, 경쟁자 유동성 뺏기 어려움. FTX 사태 유사 리스크 없으나 초기 단계 불안정. [coindesk.com](https://www.coindesk.com/business/2025/06/23/hyperliquid-rival-gte-raises-usd15m-in-series-a-led-by-paradigm)
