@@ -4,9 +4,9 @@ idea.txt
 .env
 .venv
 projects/*
-!projects/geodnet/
-!projects/geodnet/**
 !projects/gte/
 !projects/gte/**
 model_search_result.txt
 .python-version
+test.py
+test_prompts

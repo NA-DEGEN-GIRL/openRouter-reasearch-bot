@@ -1,8 +1,13 @@
-## project info ##
+## project name ##
+GTE
+
+## prompt1: In-depth Analysis and Reporting ##
+# reasoning
+**project info**
 GTE
 • One-liner: Decentralized trading platform
-• Tags: DeFi, DEX, OrderBook DEX
-• Web: https://www.gte.xyz/
+• Tag: DeFi, DEX, OrderBook DEX
+• web: https://www.gte.xyz/
 • X: https://x.com/gte_xyz
 💰 Total Funding: $25,000,000
 👑 Tier 1 Investors:
@@ -12,9 +17,8 @@ GTE
 🔹 Other Investors:
   - Flow Traders, Guy Young, IMC Trading, Maven 11, Max Resnick
 Rootdata (https://www.rootdata.com/Projects/detail/GTE?k=MTQ4ODc=)
-
-## prompt1: In-depth Analysis & Reporting ##
-# reasoning
+**end of project info**
+main request: Investigate the project in **project info**.
 Your role: You are not merely an information messenger, but the top crypto analyst whose goal is to help readers make wise investment decisions.
 Instructions:
 Web search: You MUST use web search to find the latest information from credible sources (official website, technical documentation, GitHub, major media, X, etc.).
@@ -181,7 +185,16 @@ Instructions:
 
 [Output 1: Detailed Analytical Report]
 
-Instructions: Draw on all JSON information to write a comprehensive, proportionally balanced report, including both `strengths` and `weaknesses_and_risks`. DO NOT summarize; analyze each item in rich detail.
+[Output 1: Detailed Analytical Report]
+
+Instructions: Using all information from the JSON, write a balanced and in-depth analytical report including both `strengths` and `weaknesses_and_risks`. Do **not** summarize; elaborate in depth for each item and section, always based on the JSON data.
+
+Structure & Rules:
+1. **Use Markdown**: Make full use of headings (###), subheadings (**), bullet points (-), and paragraph breaks to maximize readability.
+2. **Information synthesis**: For each section, synthesize information into a unified narrative, and avoid redundant repetition of the same point in multiple sections.
+3. **Objective tone**: Do not use first-person statements (e.g., "I think..."); always maintain an objective, analytical voice as a professional analyst.
+4. **Balanced perspective**: Cover both strengths and weaknesses fairly (but not necessarily in equal measure), so that the reader can make an unbiased, informed decision.
+5. **Flexible structure**: You may arrange the report structure as you see fit for optimal clarity and flow.
 
 ---
 

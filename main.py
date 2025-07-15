@@ -4,77 +4,38 @@ import argparse
 import sys
 import concurrent.futures
 import shutil
+import requests
 from dotenv import load_dotenv
 from openai import OpenAI, APITimeoutError, APIConnectionError
 from tenacity import retry, stop_after_attempt, wait_fixed, retry_if_exception_type
+from localization import STRINGS
 
 # --- CONFIGURATION ---
-
-# 컨텍스트 히스토리 유지 갯수 (user/assistant 쌍 기준)
-# Number of context history pairs (user/assistant) to maintain.
-TRIMMED_HISTORY_COUNT = 25 
-
-# UI 텍스트 현지화 / UI Text Localization
-STRINGS = {
-    'ko': {
-        "select_language": "언어를 선택하세요 (1: 한국어, 2: English): ",
-        "invalid_input": "잘못된 입력입니다. 1 또는 2를 입력하세요.",
-        "mode_selected": "\n'{lang_upper}' 모드로 실행합니다. 프롬프트 파일: '{prompt_filepath}'",
-        "error_no_models": "오류: '{filepath}'에 사용할 모델이 지정되지 않았음.",
-        "error_file_not_found": "오류: '{filepath}' 파일을 찾을 수 없음.",
-        "error_no_headers": "오류: '{filepath}'에서 '## 섹션명 ##' 형식의 헤더를 찾을 수 없음.",
-        "error_no_project_info": "오류: '## project info ##' 섹션을 찾을 수 없음.",
-        "error_no_api_key": "오류: .env 파일에 OPENROUTER_API_KEY가 설정되지 않았음.",
-        "research_start": "🚀 프로젝트 '{project_name}' 리서치를 시작합니다. (백그라운드 로깅 전용)",
-        "output_folder_info": "📂 결과는 '{output_dir}' 폴더에 저장됩니다.",
-        "live_log_info": "👁️  실시간 로그는 `python view_log.py`로 확인하세요.",
-        "models_in_use": "🤖 사용할 모델: {models_list}",
-        "collaboration_disabled": "🤝 AI 협업 기능이 비활성화되었습니다.",
-        "prompt_execution": "▶️ 프롬프트 {prompt_id}/{total_prompts} 실행: {prompt_name}",
-        "reasoning_activated": "   ✨ Reasoning 모드가 활성화되었습니다.",
-        "request_start": "   (총 {num_models}개 모델에 동시 요청 및 로깅 시작...)",
-        "system_prompt": "당신은 전문 블록체인 프로젝트 분석가입니다. 반드시 웹 검색을 통해 가장 정확한 최신 정보를 찾아야 합니다.",
-        "log_prompt_header": "\n\n{divider} 프롬프트 {prompt_id} ({prompt_name}) {divider}\n\n",
-        "log_reasoning_header": "\n--- [생각 과정] ---\n",
-        "log_error_header": "\n\n--- 오류 ---\n{error_message}\n",
-        "log_error_message": "오류 발생: {e}",
-        "task_completed": "✅ '{nick}' 작업 완료.",
-        "task_failed": "❌ '{nick}' 작업 실패.",
-        "task_error": "❌ '{model_nickname}' 작업 처리 중 최종 오류: {e}",
-        "prompt_finished": "\n--- 프롬프트 {prompt_id} 모든 작업 완료 ---",
-        "all_finished": "✅ 모든 리서치 과정이 완료되었습니다."
-    },
-    'en': {
-        "select_language": "Select language (1: 한국어, 2: English): ",
-        "invalid_input": "Invalid input. Please enter 1 or 2.",
-        "mode_selected": "\nRunning in '{lang_upper}' mode. Prompt file: '{prompt_filepath}'",
-        "error_no_models": "Error: No models specified in '{filepath}'.",
-        "error_file_not_found": "Error: File not found at '{filepath}'.",
-        "error_no_headers": "Error: Could not find headers in '## Section ##' format in '{filepath}'.",
-        "error_no_project_info": "Error: '## project info ##' section not found.",
-        "error_no_api_key": "Error: OPENROUTER_API_KEY is not set in the .env file.",
-        "research_start": "🚀 Starting research for project '{project_name}'. (Background Logging Only)",
-        "output_folder_info": "📂 Results will be saved in the '{output_dir}' folder.",
-        "live_log_info": "👁️  Check live logs with `python view_log.py`.",
-        "models_in_use": "🤖 Models in use: {models_list}",
-        "collaboration_disabled": "🤝 AI collaboration is disabled.",
-        "prompt_execution": "▶️ Executing Prompt {prompt_id}/{total_prompts}: {prompt_name}",
-        "reasoning_activated": "   ✨ Reasoning mode activated.",
-        "request_start": "   (Starting concurrent requests and logging for {num_models} models...)",
-        "system_prompt": "You are a professional blockchain project researcher. You must use web search to find the most up-to-date and accurate information.",
-        "log_prompt_header": "\n\n{divider} PROMPT {prompt_id} ({prompt_name}) {divider}\n\n",
-        "log_reasoning_header": "\n--- [REASONING PROCESS] ---\n",
-        "log_error_header": "\n\n--- ERROR ---\n{error_message}\n",
-        "log_error_message": "Error occurred: {e}",
-        "task_completed": "✅ Task for '{nick}' completed.",
-        "task_failed": "❌ Task for '{nick}' failed.",
-        "task_error": "❌ Final error while processing task for '{model_nickname}': {e}",
-        "prompt_finished": "\n--- All tasks for Prompt {prompt_id} are complete ---",
-        "all_finished": "✅ All research processes have been completed."
-    }
-}
+TRIMMED_HISTORY_COUNT = 25 # Number of context history pairs (user/assistant) to maintain.
+MAX_TOKENS = 65536 # default max tokens
+TIMEOUT = 1200 # 20 mins
 
 # --- HELPER FUNCTIONS ---
+def fetch_model_data(loc_strings):
+    # OpenRouter에서 모델 데이터를 가져와 딕셔너리로 반환
+    # Fetches model data from OpenRouter and returns it as a dictionary.
+    print(loc_strings["fetching_models"])
+    try:
+        response = requests.get("https://openrouter.ai/api/v1/models")
+        response.raise_for_status()
+        models_raw = response.json().get('data', [])
+        
+        model_data = {
+            model['id']: {
+                'max_completion_tokens': model.get('top_provider', {}).get('max_completion_tokens')
+            }
+            for model in models_raw
+        }
+        
+        return model_data
+    except requests.RequestException as e:
+        print(f"{loc_strings['fetching_models_failed']} ({e})")
+        return {}
 
 def load_ai_models(filepath="ai_models.txt"):
     # ai_models.txt 파일에서 모델 목록을 읽어옴
@@ -107,12 +68,12 @@ def parse_prompt_file(filepath, loc_strings):
         print(loc_strings["error_no_headers"].format(filepath=filepath))
         sys.exit(1)
 
-    project_info_text = None
+    project_name = None
     prompts = []
     for header, text in zip(headers, parts):
         clean_text = text.strip()
-        if header.lower() == "project info":
-            project_info_text = clean_text
+        if header.lower() == "project name":
+            project_name = clean_text.strip()
         elif header.lower().startswith("prompt"):
             use_reasoning = '# reasoning' in clean_text.lower()
             has_other_ai_info = '# other_ai_info' in clean_text.lower()
@@ -126,12 +87,11 @@ def parse_prompt_file(filepath, loc_strings):
                 'has_other_ai_info': has_other_ai_info
             })
 
-    if not project_info_text:
-        print(loc_strings["error_no_project_info"])
+    if not project_name:
+        print(loc_strings["error_no_project_name"])
         sys.exit(1)
 
-    project_name = project_info_text.split('\n', 1)[0].strip()
-    return project_name, project_info_text, sorted(prompts, key=lambda x: x['id'])
+    return project_name, sorted(prompts, key=lambda x: x['id'])
 
 def print_divider(char="=", length=80):
     # 구분선 출력
@@ -151,26 +111,27 @@ def get_model_nickname(model_id):
     retry=retry_if_exception_type((APITimeoutError, APIConnectionError)),
     reraise=True
 )
-def get_ai_response_stream(client, model, messages, extra_body=None):
+def get_ai_response_stream(client, model, messages, max_tokens, extra_body=None):
     # OpenRouter API를 호출하고 스트림 객체를 반환
     # Calls the OpenRouter API and returns a stream object.
     return client.chat.completions.create(
         model=model,
         messages=messages,
         stream=True,
-        timeout=180,
+        timeout=TIMEOUT,
+        max_tokens=max_tokens,
         extra_body=extra_body or {}
     )
 
 def process_and_log_request(args_tuple):
     # 모델 요청, 실시간 로깅, 결과 반환을 병렬로 처리하는 작업자 함수
     # Worker function that handles a single model request, live logging, and returns the result concurrently.
-    client, model, messages, output_path, live_log_path, api_params, loc_strings = args_tuple
+    client, model, messages, output_path, live_log_path, api_params, max_tokens, loc_strings = args_tuple
     model_nickname = get_model_nickname(model)
     full_response = ""
     
     try:
-        stream = get_ai_response_stream(client, model, messages, extra_body=api_params)
+        stream = get_ai_response_stream(client, model, messages, max_tokens, extra_body=api_params)
         
         with open(live_log_path, 'a', encoding='utf-8') as log_file:
             # Reasoning 모드가 활성화된 경우, 로그에 헤더 추가
@@ -201,13 +162,13 @@ def process_and_log_request(args_tuple):
         return (model_nickname, full_response, messages[-1]['content'])
 
     except Exception as e:
+        print(e)
         error_message = loc_strings["log_error_message"].format(e=e)
         with open(live_log_path, 'a', encoding='utf-8') as log_file:
             log_file.write(loc_strings["log_error_header"].format(error_message=error_message))
         return (model_nickname, None, messages[-1]['content'])
 
 # --- MAIN LOGIC ---
-
 def main():
     # 메인 실행 함수
     # Main execution function.
@@ -221,7 +182,7 @@ def main():
     parser.add_argument(
         '--prompt', '-p',
         type=str,
-        help="Specify a custom prompt file to use (e.g., 'prompt_en.md'). Overrides the default based on language selection."
+        help="Specify a custom prompt file inside the 'prompts/' directory (e.g., 'research_en.md'). Bypasses menus."
     )
     parser.add_argument(
         '--no-collaboration',
@@ -230,23 +191,40 @@ def main():
     )
     args = parser.parse_args()
 
-    # 언어 선택 로직 / Language selection logic
+    # --- 1. 언어 선택 ---
     lang = args.lang
     if not lang:
         while True:
-            choice = input(STRINGS['en']["select_language"]) # Show prompt in both languages
-            if choice == '1':
-                lang = 'ko'
-                break
-            elif choice == '2':
-                lang = 'en'
-                break
-            else:
-                print(STRINGS['en']["invalid_input"])
+            choice = input(STRINGS['en']["select_language"])
+            if choice == '1': lang = 'ko'; break
+            elif choice == '2': lang = 'en'; break
+            else: print(STRINGS['en']["invalid_input"])
     
     loc_strings = STRINGS[lang]
-    # 프롬프트 파일 경로 결정 / Determine prompt file path
-    prompt_filepath = args.prompt if args.prompt else ('prompt_en.md' if lang == 'en' else 'prompt.md')
+
+    # --- 2. 프롬프트 파일 경로 결정 ---
+    prompt_filepath = None
+    if args.prompt:
+        # 옵션으로 파일이 직접 지정된 경우
+        prompt_filepath = os.path.join("prompts", args.prompt)
+    else:
+        # 메뉴를 통해 파일 선택
+        print(loc_strings["select_bot"])
+        print(f"  {loc_strings['bot_option_research']}")
+        print(f"  {loc_strings['bot_option_custom']}")
+        
+        while True:
+            choice = input(f"\n번호를 입력하세요 (1-2): ")
+            if choice == '1':
+                prompt_filepath = 'prompts/research_en.md' if lang == 'en' else 'prompts/research.md'
+                break
+            elif choice == '2':
+                filename = input(loc_strings['enter_prompt_filename'])
+                prompt_filepath = os.path.join("prompts", filename)
+                break
+            else:
+                print(loc_strings["invalid_input"])
+
     print(loc_strings["mode_selected"].format(lang_upper=lang.upper(), prompt_filepath=prompt_filepath))
 
     load_dotenv()
@@ -256,8 +234,9 @@ def main():
 
     client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key)
 
+    model_data = fetch_model_data(loc_strings)
     ai_models = load_ai_models()
-    project_name, project_info, prompts = parse_prompt_file(prompt_filepath, loc_strings)
+    project_name, prompts = parse_prompt_file(prompt_filepath, loc_strings)
     
     project_folder_name = re.sub(r'[^\w-]', '_', project_name).lower()
     output_dir = f"projects/{project_folder_name}"
@@ -299,10 +278,10 @@ def main():
                 system_prompt = loc_strings["system_prompt"]
                 
                 if i == 0:
-                    user_content = f"## PROJECT INFO ##\n{project_info}\n\n## REQUEST ##\n{prompt_text}"
+                    user_content = prompt_text
                 else:
                     if args.no_collaboration or not has_other_ai_info:
-                        user_content = f"## CURRENT REQUEST ##\n{prompt_text}"
+                        user_content = prompt_text
                     else:
                         other_responses = [f"--- RESPONSE FROM {nick} ---\n{resp}\n" for nick, resp in last_turn_responses.items() if nick != model_nickname]
                         user_content = f"## PREVIOUS RESPONSES FROM OTHER AIs ##\n{''.join(other_responses)}\n\n## CURRENT REQUEST ##\n{prompt_text}"
@@ -323,7 +302,13 @@ def main():
                 if use_reasoning:
                     api_params['reasoning'] = {}
 
-                future = executor.submit(process_and_log_request, (client, model, messages, output_path, live_log_path, api_params, loc_strings))
+                max_tokens = MAX_TOKENS
+                if model_data and model in model_data:
+                    model_max = model_data[model].get('max_completion_tokens')
+                    if model_max is not None:
+                        max_tokens = model_max
+
+                future = executor.submit(process_and_log_request, (client, model, messages, output_path, live_log_path, api_params, max_tokens, loc_strings))
                 future_to_model[future] = model
 
             for future in concurrent.futures.as_completed(future_to_model):

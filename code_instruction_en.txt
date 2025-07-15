@@ -1,14 +1,14 @@
-CLI-based Multi-AI Automated Research Bot - System Requirements Specification
+AI Workflow Orchestrator - System Requirements Specification
 1. System Overview and Purpose
-This system is a CLI-based automated research bot that utilizes various AI (LLM) model APIs from the OpenRouter platform to concurrently execute, merge, analyze, organize, and report on user-defined project research prompts across multiple AIs.
+This system is a CLI-based automation framework that utilizes the various AI (LLM) model APIs of the OpenRouter platform to automatically process user-defined workflows by concurrently executing, merging, and synthesizing them across multiple AIs.
 
-Key features include real-time web information utilization, inter-AI collaboration/comparison, and a cyclical workflow of analysis, structuring, and output generation (reports, summaries, tweets, etc.).
+Its key features are the utilization of real-time web information, inter-AI collaboration and comparison, and a cyclical process of analysis, structuring, and output generation.
 
 2. Functional Specifications and Requirements (Implementation Perspective)
 [1] Environment & Setup
 Python-based.
 
-Utilizes the OpenRouter API — refer to the official documentation at https://openrouter.ai/docs/quickstart.
+Utilizes the OpenRouter API.
 
 The OPENROUTER_API_KEY must be present in an .env file.
 
@@ -19,92 +19,76 @@ Must be executable as a standalone CLI application.
 [2] Input Files and Configuration
 ai_models.txt: A list of OpenRouter model IDs to be used, with one ID per line.
 
-Example: gpt-4.1, mistral/mistral-large, openai/gpt-4o, x-ai/grok-4, etc.
+Prompt File (e.g., research.md, writing.md): Describes the task's name and each step in separate sections.
 
-prompt.md: Describes the basic project information and each research step in separate sections.
+## project name ##: A unique name for the task. Mandatory in the first section.
 
-## project info ##: Introduction to the project being researched (name, official website, investors, etc.). The project name on the first line is mandatory.
+## prompt1 ##, ## prompt2 ##, …: Step-by-step prompts. The number of steps can be freely added or modified.
 
-## prompt1 ##, ## prompt2 ##, ...: Step-by-step prompts. The number of steps can be freely added or modified.
+Options for reasoning and cross-AI information (collaboration) can be provided per prompt using tags (e.g., # reasoning, # other_ai_info).
 
-Options for reasoning and cross-AI information (collaboration) can be provided per prompt using comments or tags (e.g., # reasoning, # other_ai_info).
-
-Section divisions, prompt structures, and output formats are declaratively and flexibly specified within prompt.md.
+All instructions, including system prompts, roles, and output formats, are declaratively defined within this file.
 
 [3] AI Execution and Workflow
 For each prompt step, initiate parallel/concurrent API requests to all models listed in ai_models.txt.
 
-The initial prompt (prompt1) will pass the project info + prompt1 text to the AI.
+The results from each AI are saved in a subfolder based on the task name (e.g., projects/...) as individual response files (p1_MODELNAME.md, final_MODELNAME.md, etc.).
 
-The results from each AI are saved in a subfolder based on the project name (e.g., projects/...) as individual response files (p1_MODELNAME.md, final_MODELNAME.md, etc.).
+In collaboration steps (other_ai_info), a dynamic prompt is generated for each AI by providing the responses from all other AIs in the following format:
 
-For prompt2 and beyond, dynamically generate a prompt for each AI by providing the responses from all other AIs (e.g., "A should reference results from B and C," "B should reference A and C..."), along with the main prompt instructions.
-
-Information-sharing format: When passing results from other AIs, use a clear Markdown header to distinguish the source of each AI's output:
+Information-sharing format:
 --- RESPONSE FROM [AI Model Nickname] ---
 (Full response content from the respective AI)
 
-The "collaboration/cross-reference" (other_ai_info) feature should be toggleable via a command-line flag/option.
-
-Repeat this process for each subsequent step: prompt3, prompt4, ..., until the last one.
-
-The final prompt is automatically identified within prompt.md.
+The "collaboration/cross-reference" feature can be toggled on/off via a command-line flag.
 
 [4] Failure/Exception/Retry Handling
-On API request failure (3xx/4xx/5xx, network issues, timeouts, etc.): retry 1-2 times with a set interval.
+On API request failure: retry 1-2 times with a set interval.
 
 If a specific AI repeatedly fails within the same prompt step, it is considered offline for that step, and the workflow continues without interruption.
 
 [5] Outputs and File Structure
-Step-by-step results: projects/ProjectName/p1_MODEL.md, p2_MODEL.md, ..., Final: final_MODEL.md.
+Step-by-step results: projects/TaskName/p1_MODEL.md, p2_MODEL.md, ..., Final: final_MODEL.md.
 
-Real-time progress: Reasoning/response logs are streamed to projects/ProjectName/live_logs/MODEL.log.
+Real-time progress: Reasoning/response logs are recorded in projects/TaskName/live_logs/MODEL.log.
 
-Project names are automatically sanitized to be valid file/folder names.
+Task names are automatically sanitized to be valid file/folder names.
 
 [6] Real-time Logging and Progress Display
-The CLI will display major workflow progress messages (e.g., "Starting prompt1...", summary of prompt content, start/completion/failure of each AI response).
+The CLI provides messages for major workflow progress (e.g., "Starting prompt1...", summary of prompt content, start/completion/failure of each AI response).
 
-Responses and reasoning from each AI are logged in real-time, allowing for live monitoring of the .log files via a CLI command (e.g., view_log.py).
+The progress of a specific model can be monitored in real-time via a CLI command (e.g., view_log.py).
 
-Utilize the stream feature of OpenAI/OpenRouter where possible to reflect the response generation process in real-time.
+Utilizes the stream feature of OpenRouter to log the response generation process in real-time.
 
 [7] Project Extensibility and Flexibility
-Supports an unlimited number of models.
+Supports an unlimited number of models and prompt steps.
 
-The prompt.md format is freely extensible (section names, number of steps, formats, options, etc.).
-
-Output types (reports, summaries, tweets, etc.) can be freely defined and modified via command templates within prompt.md.
-
-The system should be designed to easily incorporate new LLM features (e.g., web search, advanced reasoning) as they become available.
-
-JSON Validation: In the JSON generation step, the system must self-validate that the output conforms to the standard JSON format. If an invalid JSON is generated, it must recognize the error, correct it to a valid format, and output it again.
+JSON Validation: In JSON generation steps, the generated output must be self-validated for standard JSON format compliance. If invalid, the AI must recognize the error, correct it, and output the valid format.
 
 3. Technical/Implementation Points
-File-based state management: (ai_models.txt, prompt.md, .env, projects/…, etc.)
+File-based state management: (ai_models.txt, prompt files, .env, projects/…, etc.)
 
-Concurrent processing of AI requests using multi-threading, thread pools, or asynchronous methods.
+Concurrent processing of AI requests using multi-threading.
 
-Handling of real-time streaming and fallback mechanisms for failures.
+System prompts should be defined within each prompt file to assign different roles for different tasks (e.g., "You are a crypto analyst," "You are a novelist").
 
-Unified system prompt (assigning a role to each AI: "You are a professional blockchain researcher, web search is mandatory...").
-
-Consistent naming convention for response files using user-friendly model nicknames/IDs.
-
-Detailed error logging in designated log files within each project folder.
+Detailed error history is recorded in log files.
 
 4. Usage Scenario (Summary)
-The user prepares .env, ai_models.txt, and prompt.md files and runs python research_bot.py.
+The user prepares the .env, ai_models.txt, and the desired prompt file.
 
-The system automatically analyzes, merges, and generates all outputs (reports, summaries, tweets, etc.) up to the desired step.
+Runs the command python research_bot.py --prompt [prompt_filename].
 
-Live logs can be monitored on a per-project/per-model basis using view_log.py or a similar utility.
+All outputs are automatically generated according to the specified workflow.
 
-5. Examples and Extension Guide
-Additional prompt steps like ## prompt5 ## can be designed in prompt.md.
+Live logs can be monitored using view_log.py.
 
-"Cross-AI reference" (other_ai_info) can be configured selectively per prompt or at runtime.
+5. Extension Guide
+Research Bot: Use research.md prompt file.
 
-Outputs can be diversified beyond reports/summaries/tweets to include free text, tables, structured data (JSON), graphs, etc.
+Collaborative Novel Writing Bot: Use a novel_writing.md prompt file that assigns different roles.
 
-A separate script, like search_ai_models.py, could be implemented to discover the latest list of models from LLM providers.
+Code Review Bot: Use a code_review.md prompt file that defines steps for code generation, security review, and refactoring.
+
+By simply defining a new prompt file, any kind of multi-AI collaborative workflow can be created.

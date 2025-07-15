@@ -1,191 +1,213 @@
-# OpenRouter 기반 AI 멀티모델 자동 리서치 시스템
+# AI-Forge: AI Workflow Orchestrator
 
-**이 프로젝트는 OpenRouter 플랫폼에서 제공하는 다양한 최신 AI 언어모델(LLM)을 활용하여, 블록체인/크립토 프로젝트 리서치를 자동화하는 시스템입니다.**
+**다양한 AI 모델을 지휘하여, 사용자가 설계한 작업 흐름을 자동으로 실행하는 프레임워크입니다.**
 
-OpenRouter API를 통해 여러 AI 모델을 병렬 호출, 각 모델의 웹검색·심층 분석 기능, AI간 협업 및 결과 교차 검증, 구조화된 보고서 생성까지 전 과정을 단 한 번에 자동 처리합니다.
+이 프로젝트는 OpenRouter 플랫폼의 여러 LLM(AI)을 활용하여, 사용자가 직접 정의한 프롬프트(`.md`) 시나리오에 따라 AI들을 병렬로 실행하고, 그 결과물을 교차 검증, 병합, 분석하여 최종 결과물을 생성하는 CLI 기반 자동화 툴킷입니다.
 
----
-
-## 📝 시스템 설계 및 코드 자동화 방식 (code_instruction.txt 참고)
-
-이 프로젝트의 전체 설계와 소스코드는 `code_instruction.txt`라는 상세 요구사양서를 기반으로 대형 언어모델(LLM, 예: GPT-4, Claude 등)을 사용해 자동 생성되었습니다.  
-즉, code_instruction.txt 파일은 기획서이자 "LLM에 입력하는 프롬프트"로, 아래와 같은 방식으로 동작합니다.
-
-- **code_instruction.txt**에 시스템 목표, 파일구조, 로직, 예외처리, 결과물 형태 등을 상세히 작성
-- 이 프롬프트를 OpenRouter 등 LLM에 입력하면, LLM이 본 저장소(코드, 문서, 워크플로)를 자동 생성하도록 설계됨
-- 개발자 누구나 code_instruction.txt를 사용해 동일/유사 시스템을 재현, 확장, 커스터마이즈 가능
-
-**즉, 본 프로젝트는 사람이 직접 코딩한 것이 아니라, 명확한 instruction 기반의 LLM 코드 auto-generation 방식을 적극 활용한 사례입니다.**
+> **프로젝트 생성 배경:** 이 프로젝트의 전체 코드는 `code_instruction.txt`에 명시된 요구사항 명세서를 기반으로, LLM(AI)과의 협업을 통해 생성되었습니다.
 
 ---
 
-## 주요 파일 설명
+## ✨ 주요 특징
 
-- **research_bot.py**
-  - 리서치 자동화 워크플로를 담당. 여러 AI 모델에 프롬프트를 병렬로 전달, 각 답변/Reasoning을 실시간 기록, 여러 프롬프트를 순차적으로 처리
-  - AI 간 협업(다른 모델 답변을 참고함) 지원
-  - 각 프롬프트 결과 및 실시간 로그를 `/projects/[프로젝트명]/` 내부에 저장
-- **view_log.py**
-  - 실시간 각 모델의 Reasoning 및 결과 진행상황을 모니터링하는 터미널 뷰어
-- **prompt.md / prompt_en.md**
-  - (필수) 프로젝트 기본정보와 단계별 리서치 프롬프트 정의, 분석 포맷 예시까지 포함
-- **ai_models.txt**
-  - 사용할 AI 언어모델(OpenRouter ID) 정의. 한 줄에 하나씩
-- **utils/search_ai_models.py**
-  - OpenRouter에서 지원하는 모델 탐색 및 검색 툴
-- **requirements.in**
-  - 필요한 파이썬 패키지 집합
-- **copy.env**
-  - 환경변수 템플릿 (`OPENROUTER_API_KEY` 필요)
+-   **다중 AI 병렬 처리:** `ai_models.txt`에 명시된 모든 모델에 작업을 동시에 분산하여 처리 속도를 극대화합니다.
+-   **프롬프트 기반 워크플로:** 코드를 수정할 필요 없이, `prompts/` 폴더 안의 마크다운 파일 하나로 전체 작업 흐름(분석, 협업, 출력 형식 등)을 자유롭게 설계하고 제어할 수 있습니다.
+-   **AI 협업 및 검증:** 각 AI가 다른 AI의 답변을 참고하여 자신의 결과를 보강하거나 수정하는 '교차 검증' 단계를 워크플로에 포함시킬 수 있습니다. (`# other_ai_info` 태그 활용)
+-   **실시간 로그 모니터링:** 메인 프로세스와 별도로, `view_log.py`를 통해 특정 AI의 작업 과정을 실시간으로 확인할 수 있습니다.
+-   **유연한 확장성:** `prompts/` 폴더에 새로운 프롬프트 파일만 추가하면, 어떤 종류의 자동화 작업이든 즉시 실행할 수 있습니다.
 
 ---
 
-## 필수 준비 사항
+## 🚀 시작하기 (Quick Start)
 
-1. **OpenRouter 회원가입** 및 API 키 발급 (https://openrouter.ai/)
-2. `copy.env` → `.env` 복사 후 KEY 값 입력
-3. `ai_models.txt` 모델 ID 한 줄씩 작성 (`utils/search_ai_models.py`로 탐색 지원)
-4. 의존 패키지 설치  
-   ```bash
-   pip install -r requirements.in
-   ```
-5. `prompt.md` 또는 `prompt_en.md` 확인/작성
+### 1. 환경 설정
 
----
-
-## 사용 방법
-
-### 1. AI 모델 탐색 후 `ai_models.txt` 만들기  
 ```bash
-python utils/search_ai_models.py       # 전체 모델 리스트
-python utils/search_ai_models.py gpt   # 'gpt' 포함 모델만 검색
-```
-- 원하는 모델 ID를 `ai_models.txt`에 한 줄씩 작성
+# 1. 저장소 복제
+git clone [https://github.com/NA-DEGEN-GIRL/openRouter-ai-forge.git](https://github.com/NA-DEGEN-GIRL/openRouter-ai-forge.git)
+cd openRouter-ai-forge
 
-### 2. 리서치 봇 실행  
-```bash
-python research_bot.py
-```
-- 언어선택/프롬프트 자동감지 (혹은 옵션 명시)
-- 결과 및 체계적 로그, 단계별 분석 출력
+# 2. 필요 라이브러리 설치
+pip install -r requirements.txt
 
-**협업형(모델 교차참조 Off) 실행:**  
-```bash
-python research_bot.py --no-collaboration
-```
+# 3. .env 파일 설정
+cp copy.env .env
+# nano .env 또는 vim .env 명령어로 .env 파일을 열고 API 키를 입력하세요.
+````
 
-### 3. 실시간 Reasoning 모니터링  
-```bash
-python view_log.py
-```
-- 각 AI 모델의 reasoning 로그 스트리밍 확인
+### 2\. 설정 파일 준비
 
----
+  * **`ai_models.txt`**: 사용할 AI 모델의 ID를 한 줄에 하나씩 입력합니다. (예: `google/gemini-2.5-pro`)
+  * **`prompts/`**: 실행할 작업 설계도(`.md`)를 이 폴더 안에 넣습니다. `prompts/research.md` 예시를 참고하세요.
 
-## 구조 및 결과물
+### 3\. 봇 실행
 
-- `projects/프로젝트명/final_MODEL.md`: 각 모델별 최종 분석 결과
-- `projects/프로젝트명/live_logs/MODEL.log`: reasoning/진행 과정 로그
-- 단계별 결과, 통합(병합) 결과, 구조화된 JSON, 다양한 형태의 보고서, 요약, 트윗 등 자동 생성
+  * **기본 실행 (리서치 봇)**
+    ```bash
+    python main.py
+    ```
+  * **언어 및 특정 프롬프트 지정하여 실행**
+    ```bash
+    python main.py --lang en --prompt research_en.md
+    ```
 
----
+### 4\. 실시간 로그 확인 (선택 사항)
 
-## 참고 및 고급 정보
+  * 새 터미널을 열고 아래 명령어를 실행하면, 특정 모델의 작업 과정을 실시간으로 볼 수 있습니다.
+    ```bash
+    python view_log.py
+    ```
 
-- **code_instruction.txt**를 직접 읽어보면 설계 논리, 코드 자동생성 방식, 추가 사용법 등을 빠르게 파악할 수 있습니다.
-- 영어권 개발자는 `code_instruction_en.txt`로 동일 컨셉과 코드를 생성할 수 있습니다.
-- LLM 기반 자동화 방식 특성상, 재생산성/확장성이 뛰어나고, 프롬프트만 교체하면 다양한 리서치/AI 파이플라인 구현 가능
+-----
 
----
+## ⚙️ 핵심 개념: 프롬프트 파일 설계
 
-# Multi-model AI Research Automation System (Powered by OpenRouter)
+이 시스템의 모든 동작은 `prompts/` 폴더 안의 `.md` 파일로 제어됩니다.
 
-**This project leverages various state-of-the-art AI models from the OpenRouter platform to fully automate blockchain/crypto project research.**
+> **중요:** 모든 프롬프트 파일은 반드시 `prompts/` 폴더 안에 있어야 합니다.
 
-It orchestrates parallel LLM calls, web search, collaborative AI cross-referencing, deep-dive analysis, and multi-format report generation—in a single automated pipeline.
+```markdown
+## project name ##
+My Awesome Project
 
----
+## prompt1: [1단계: 정보 수집] ##
+# reasoning
+[프롬프트 상세 지시사항...]
 
-## 📝 Design Principle — Automated LLM Code Generation (see `code_instruction_en.txt`)
-
-All system specifications, design principles, and source code in this repository were generated automatically by using a detailed prompt and blueprint defined in `code_instruction_en.txt` (English version of code_instruction).
-
-- `code_instruction_en.txt` acts as the requirement prompt for large language models (LLMs). When input to an LLM on OpenRouter or similar, this prompt will produce the same (or extensible) code and project structure demonstrated here.
-- This project stands as an example of using LLMs for precise, fast, and reproducible codebase generation—not hand-crafted, but fully instruction-driven.
-
-**Feel free to examine or use `code_instruction_en.txt` as LLM input to recreate, extend, or adapt this system for your own workflow.**
-
----
-
-## Main Files
-
-- **research_bot.py**
-  - Handles the research automation workflow. Sends prompts to multiple AI models in parallel, logs real-time reasoning, supports collaborative or single-model research, and saves results to `/projects/[ProjectName]/`
-- **view_log.py**
-  - Terminal-based real-time analyzer for per-model reasoning and progress logs
-- **prompt.md / prompt_en.md**
-  - (Required) Markdown with all project info, structured prompts, format examples
-- **ai_models.txt**
-  - Target AI model IDs (one per line); use `utils/search_ai_models.py` for discovery
-- **utils/search_ai_models.py**
-  - Tool for browsing and filtering OpenRouter-supported models
-- **requirements.in**
-  - Python pip dependencies
-- **copy.env**
-  - Template for environment variables (`OPENROUTER_API_KEY` needed)
-
----
-
-## Prerequisites
-
-1. OpenRouter account and API Key (https://openrouter.ai/)
-2. Copy `copy.env` to `.env` and add your API key
-3. Write model IDs to `ai_models.txt`
-4. Install dependencies  
-   ```bash
-   pip install -r requirements.in
-   ```
-5. Prepare a project prompt (`prompt.md` or `prompt_en.md`)
-
----
-
-## Usage
-
-### 1. Search/select AI models for `ai_models.txt`
-```bash
-python utils/search_ai_models.py
-python utils/search_ai_models.py gpt
-```
-- Copy the desired model IDs to `ai_models.txt` (one per line)
-
-### 2. Run the research bot
-```bash
-python research_bot.py
-```
-- Automatic language detection/prompt file selection (or use options)
-- All results, progress logs, and analyses saved systematically
-
-**Disable collaboration:**  
-```bash
-python research_bot.py --no-collaboration
+## prompt2: [2단계: 교차 검증] ##
+# other_ai_info
+[프롬프트 상세 지시사항...]
 ```
 
-### 3. Monitor real-time reasoning
-```bash
-python view_log.py
+  * `## project name ##`: 작업의 고유 이름. 결과물이 저장될 폴더명으로 사용되므로 **반드시 파일 최상단에 작성해야 합니다.**
+  * `## prompt1 ##`: 각 작업 단계를 정의합니다. 번호와 이름은 자유롭게 지정할 수 있습니다.
+  * **옵션 태그:**
+      * `# reasoning`: AI의 생각 과정을 로그 파일에 기록합니다.
+      * `# other_ai_info`: 이전 단계에서 다른 AI가 생성한 답변을 현재 AI가 참고하도록 합니다.
+
+-----
+
+## 🗂️ 주요 파일 구조
+
+```
+/
+├── main.py                # 메인 실행 스크립트
+├── view_log.py            # 실시간 로그 뷰어
+├── localization.py        # 다국어 UI 텍스트
+├── utils/
+│   └── search_ai_models.py  # 모델 정보 검색 유틸리티
+├── ai_models.txt          # 사용할 AI 모델 목록
+├── requirements.txt       # 필요 라이브러리
+├── copy.env               # .env 파일 템플릿
+└── prompts/
+    ├── research.md        # 기본 리서치 워크플로 (한글)
+    └── research_en.md     # 기본 리서치 워크플로 (영어)
 ```
 
----
+\<br\>
 
-## Output & Structure
+# AI-Forge: AI Workflow Orchestrator (English)
 
-- `projects/ProjectName/final_MODEL.md`: Final analysis per AI model
-- `projects/ProjectName/live_logs/MODEL.log`: Reasoning/process log
-- Stepwise outputs, merged reports, JSON, summaries, tweets—all automated
+**This is more than just an AI bot; it's a framework for orchestrating multiple AIs to automate user-defined workflows.**
 
----
+This project is a CLI-based automation toolkit that leverages various LLM (AI) models from the OpenRouter platform. It allows users to design custom prompt scenarios in simple Markdown (`.md`) files to have multiple AIs concurrently execute tasks, cross-validate results, merge findings, and automatically generate final outputs.
 
-## Reference
+> **About This Project:** The entire codebase for this project was generated in collaboration with an LLM, based on the system requirements specification detailed in `code_instruction_en.txt`.
 
-- The actual design logic, code generation principles, and advanced usage can be quickly understood by reviewing `code_instruction_en.txt`.
-- You may use or adapt the file as an LLM input to create your own version—extendable to other domains or research pipelines.
+-----
+
+## ✨ Key Features
+
+  * **Concurrent Multi-AI Processing:** Drastically reduces task time by distributing work to all specified models in `ai_models.txt` simultaneously.
+  * **Prompt-Driven Workflow:** The entire workflow—from analysis and collaboration to output formatting—is controlled by a single Markdown file in the `prompts/` folder, requiring no code changes.
+  * **AI Collaboration & Validation:** Incorporate a "cross-validation" step in your workflow, where each AI references the outputs of other AIs to enrich or correct its own findings (using the `# other_ai_info` tag).
+  * **Live Log Monitoring:** A separate `view_log.py` script allows for real-time monitoring of any specific model's progress without cluttering the main process terminal.
+  * **Flexible & Extensible:** Design any kind of AI collaborative automation—research, content creation, code review, novel writing—just by creating a new prompt file.
+
+-----
+
+## 🚀 Quick Start
+
+### 1\. Environment Setup
+
+```bash
+# 1. Clone the repository
+git clone [https://github.com/NA-DEGEN-GIRL/openRouter-ai-forge.git](https://github.com/NA-DEGEN-GIRL/openRouter-ai-forge.git)
+cd openRouter-ai-forge
+
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Configure .env file
+cp copy.env .env
+# Open .env with a text editor (e.g., nano .env) and enter your API key.
+```
+
+### 2\. Configuration
+
+  * **`ai_models.txt`**: List the OpenRouter model IDs you want to use, one per line (e.g., `google/gemini-2.5-pro`).
+  * **`prompts/`**: Place your workflow blueprint (`.md` file) inside this directory. Refer to the `prompts/research_en.md` example.
+
+### 3\. Run the Bot
+
+  * **Default Execution (Research Bot)**
+    ```bash
+    python main.py
+    ```
+  * **Specify Language and a Custom Prompt File**
+    ```bash
+    python main.py --lang en --prompt custom_task.md
+    ```
+
+### 4\. Monitor Live Logs (Optional)
+
+  * Open a new terminal and run the following command to see a specific model's progress in real-time.
+    ```bash
+    python view_log.py
+    ```
+
+-----
+
+## ⚙️ Core Concept: Designing the Prompt File
+
+All operations of this system are controlled by `.md` files in the `prompts/` directory.
+
+> **Important:** All prompt files must be placed inside the `prompts/` directory.
+
+```markdown
+## project name ##
+My Awesome Project
+
+## prompt1: [Step 1: Information Gathering] ##
+# reasoning (optional)
+[Detailed instructions for the prompt...]
+
+## prompt2: [Step 2: Cross-Validation] ##
+# other_ai_info (optional)
+[Detailed instructions for the prompt...]
+```
+
+  * **`## project name ##`**: A unique name for the task. This **must be the first section** as it is used for the output folder name.
+  * **`## prompt1 ##`**: Defines each step of the workflow. The number and name are fully customizable.
+  * **Option Tags:**
+      * `# reasoning`: Logs the AI's thought process.
+      * `# other_ai_info`: Allows the AI to reference responses from other AIs in the previous step.
+
+-----
+
+## 🗂️ Key File Structure
+
+```
+/
+├── main.py                # Main execution script
+├── view_log.py            # Real-time log viewer
+├── localization.py        # Multi-language UI text
+├── utils/
+│   └── search_ai_models.py  # Model search utility
+├── ai_models.txt          # List of AI models to use
+├── requirements.txt       # Required packages
+├── copy.env               # Template for .env file
+└── prompts/
+    ├── research.md        # Default research workflow (Korean)
+    └── research_en.md     # Default research workflow (English)
+```
