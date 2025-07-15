@@ -72,6 +72,12 @@ def parse_prompt_file(filepath, loc_strings):
     prompts = []
     for header, text in zip(headers, parts):
         clean_text = text.strip()
+        
+        # 'deactive:'로 시작하는 섹션은 건너뜀
+        # Skip sections starting with 'deactive'
+        if header.lower().startswith("deactive"):
+            continue
+
         if header.lower() == "project name":
             project_name = clean_text.strip()
         elif header.lower().startswith("prompt"):
