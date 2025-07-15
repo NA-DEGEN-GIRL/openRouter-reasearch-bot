@@ -10,3 +10,4 @@ model_search_result.txt
 .python-version
 test.py
 test_prompts
+__pycache__
