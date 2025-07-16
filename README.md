@@ -93,6 +93,22 @@ SampleProj
 ## deactive 실험용JSON ##
 실행되지 않음
 ```
+---
+
+## 🏷️ 프롬프트 태그 옵션(중요)
+
+**AI-Forge는 프롬프트 각 단계에서 아래와 같은 태그 구문으로 AI 동작을 세밀하게 제어할 수 있습니다.**
+
+| 태그     | 설명                                                                             | 사용 예                      |
+|----------|----------------------------------------------------------------------------------|------------------------------|
+| `# reasoning`      | 해당 프롬프트 단계에서 AI가 reasoning/생각 과정(Chain-of-Thought)을 실시간 로그와 파일에 남깁니다. | `# reasoning`                |
+| `# other_ai_info`  | 이 단계의 AI 답변 생성시 이전 단계의 다른 AI 답변을 참고, 교차 검증/토론/병합 등을 수행합니다.   | `# other_ai_info`            |
+| `# img [경로/URL]` | 첨부 이미지(jpg/png/webp 등)는 해당 프롬프트의 AI 질문에 자동 base64로 첨부(Multimodal 분석)   | `# img test.jpg`             |
+| `# pdf [경로]`     | 첨부 PDF 파일을 base64로 변환, AI가 문서 요약/분석에 직접 사용하게 요청 (멀티 문서 가능)         | `# pdf report.pdf`           |
+
+- 여러 태그는 한 단계에 혼용 가능(줄바꿈)
+- 옵션 태그, 첨부파일 관련 라인은 프롬프트 실제 본문에서 자동 제거 처리
+- prompts/ 내 .md 파일 어디든 자유롭게 배치가능
 
 ---
 
@@ -155,6 +171,20 @@ Prompt text...
 ## deactive Archive Step ##
 (This section is ignored)
 ```
+
+---
+
+**All major workflow logic, reasoning, references, and multimodal (image, PDF) inputs are controlled by declarative tags below each prompt step:**
+
+| Tag           | Description                                                                | Usage Example                     |
+|---------------|----------------------------------------------------------------------------|-----------------------------------|
+| `# reasoning` | Logs AI's explicit, stepwise reasoning in real-time log/output files.      | `# reasoning`                     |
+| `# other_ai_info` | Lets the AI reference, critique, or merge previous outputs from other AIs for this step. | `# other_ai_info`                 |
+| `# img [path/URL]`| Attaches an image file or URL as a multimodal input for analysis or vision models. | `# img images/logo.png`           |
+| `# pdf [path]`| Attaches a PDF file for document analysis, OCR, etc.                       | `# pdf docs/whitepaper.pdf`       |
+
+- All tags may be combined (as separate lines) beneath a given prompt header.
+- These tag lines are auto-removed from the user-facing prompt sent to AIs.
 
 ---
 
