@@ -57,7 +57,7 @@ python view_log.py
 - 모든 프롬프트는 `## ... ##`로 구간(header/블록)을 나누며,  
    - **`## project name ##`**: 프롬프트 파일 최상단(결과 폴더명이 됨)
    - **`## promptN: ... ##`**: 워크플로 단계(번호+설명 자유). 번호(1~)에 의해 순서 적용
-   - **`## deactive: ... ##`**: 헤더만 `deactive:`로 시작하면 파일/단계 무시(실행/로그 모두 해당 없음), 반드시 ##로 구간을 감싸야 함
+   - **`## deactive ... ##`**: 헤더만 `deactive`로 시작하면 파일/단계 무시(실행/로그 모두 해당 없음), 반드시 ##로 구간을 감싸야 함
 
 - 헤더마다 줄바꿈 뒤로 (본문, 옵션 태그, 첨부파일선언 등 자유롭게 배치)
 - prompts/ 내 하위폴더에도 지원
@@ -76,7 +76,7 @@ MyProject
 # other_ai_info
 종합 내용...
 
-## deactive: 테스트 ##
+## deactive 테스트 ##
 테스트 블록(실행 안 됨)
 ```
 
@@ -131,7 +131,7 @@ MyProject
 - **Prompt-driven, declarative workflow**: freely add/edit prompt `.md` files under prompts/ (supporting subfolders!)
 - **Multimodal support**: Attach images (`# img path`) or PDFs (`# pdf path`) per prompt block
 - Real-time log viewing (view_log.py): monitor each AI's progress stepwise
-- **Section skipping**: Any section with header starting `## deactive: ... ##` (must use double hash both sides) is ignored (not executed or logged)
+- **Section skipping**: Any section with header starting `## deactive ... ##` (must use double hash both sides) is ignored (not executed or logged)
 - Prompt files can be nested in subfolders under prompts/
 
 ---
@@ -143,7 +143,7 @@ MyProject
 - Every workflow is set with `## ... ##` double-sharp headers:
     - `## project name ##` (REQUIRED at file top; defines output directory name)
     - `## prompt1: ... ##`, `## prompt2: ... ##`, ... (prompt blocks, sequentially sorted by number)
-    - `## deactive: ... ##` (skips that section entirely; must end with "##")
+    - `## deactive ... ##` (skips that section entirely; must end with "##")
 
 **2. Option Tags**
 
@@ -171,7 +171,7 @@ Prompt detail here...
 # other_ai_info
 Summary here...
 
-## deactive: legacy step ##
+## deactive legacy step ##
 (This section will be ignored)
 ```
 
