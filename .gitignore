@@ -11,3 +11,4 @@ model_search_result.txt
 test.py
 test_prompts
 __pycache__
+res_data_priv

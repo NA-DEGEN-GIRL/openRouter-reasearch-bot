@@ -1,106 +1,123 @@
-### 변경사항 요약
+### 변경사항 요약 (CHANGELOG)
 
-- **기술 메커니즘 관련**  
-  - ‘MegaETH’의 정의 및 현황(레이어1/레이어2 여부와 온체인 주문장 실제 구현) 부분에 불확실성이 있으므로, 공식 웹과 외부 기사 기반으로 “이전답변의 추정”을 명확히 구분하고, 기능적으로 증명된 부분만 채택함.
-- **토크노믹스**  
-  - 모든 리서치에서 공통적으로 ‘토큰 정보 미공개’임이 확인되어, 사업의 성장 단계상 확정 사안이 없음을 명확히 표기.
-- **사용자 경험(참여 경로)**  
-  - 웹사이트에서 실제 ‘테스트넷’ 또는 ‘거래 인터페이스’가 공개되어 있음을 공식 사이트 기준으로 바로 명시(이전 일부 답변은 투자전 랜딩페이지만 언급하였으나, 검색 결과 현재 서비스 체험 가능).
-- **경쟁 프로젝트 및 시장 점유율**  
-  - 하이퍼리퀴드(Hyperliquid) 등의 실거래량 및 시장 데이터의 정확성과 최신성을 유지하기 위해 필요한 부분만 인용.
-- **용어 설명**  
-  - 초보자 안내 전용 섹션을 분리하여, ‘DEX’, ‘오더북’ 등 반드시 필요한 핵심 용어는 간결·명료하게 설명.
-- **디테일 및 FAQ 강점 추가**  
-  - AI B의 디테일(예: 투자자의 ‘유형’, 커뮤니티 펀딩 라운드 정보), AI A의 현실적 예시 설명, 그리고 ‘거래자/에어드랍 참여’ 등 가능한 활동 경로를 통합 보강.
+- **투자 금액 업데이트:** $15M 시리즈 A 확보(2025년 6월), 누적 $25M은 맞으나 주요 라운드는 최근 $15M임. [coindesk.com](https://www.coindesk.com/business/2025/06/23/hyperliquid-rival-gte-raises-usd15m-in-series-a-led-by-paradigm), [coincentral.com](https://coincentral.com/paradigm-backs-gte-with-15m-to-build-the-fastest-decentralized-exchange/)
+- **제품 상황 정정:** 출시 베타/메인넷 정보가 혼재되어 있었으나, 실제 https://www.gte.xyz/ 기준 (2025/07 기준) 메인넷 또는 실제 사용 가능한 서비스가 있는 것으로 확인됨.
+- **토크노믹스 확정:** 공식 웹사이트와 미디어에 토큰 발행 정보 없음. 파생상품 DEX 특성상 가능성은 높으나, 공식화된 정보 없음.
+- **기술 구조 보강:** 오더북 기반 DEX(CLOB), 완전 비수탁-온체인으로 설계, "CEX급 속도+DEX 보안"이라는 점 공식문구에서 강조. [gte.xyz](https://www.gte.xyz/)
+- **팀/투자자 정보 구조화:** X 계정 기반 경력 참고 및 패러다임(Paradigm) 리드 등 투자사 구조 명확화. [coindesk.com](https://www.coindesk.com/business/2025/06/23/hyperliquid-rival-gte-raises-usd15m-in-series-a-led-by-paradigm), [rootdata.com](https://www.rootdata.com/Projects/detail/GTE?k=MTQ4ODc=)
+- **경쟁 분석 구체화:** 하이퍼리퀴드(Hyperliquid), dYdX 등과 비교해 주요 강점/약점 보강.
+- **에어드랍 정보:** 공식 에어드랍 없음, 다만 패턴상 향후 충분히 가능성 높음.
+- **용어 설명 및 초보자 안내:** 용어의 명확한 정의 및 쉬운 예시 추가.
+- **기타 내용 보완:** 커뮤니티 사용/참여법, 규제·기술·시장 리스크 정리.
 
 ---
 
-### GTE 프로젝트 마스터 팩트 시트  
-(분석일: 2025년 07월 15일)
-
-#### 1. 한눈에 보는 GTE
-
-- **정의**  
-  GTE는 ‘MegaETH’ 기반의 중앙화 거래소 수준 속도와 경험을 목표로 하는 탈중앙화 주문장(오더북) 거래소(Decentralized Orderbook Exchange, DEX) 프로젝트다. 사용자는 자산을 직접 지갑에서 관리하며, 낮은 지연 속도와 높은 투명성을 양립하고자 한다.  
-  출처: [gte.xyz](https://www.gte.xyz/), [coindesk.com](https://www.coindesk.com/business/2025/06/23/hyperliquid-rival-gte-raises-usd15m-in-series-a-led-by-paradigm),  
-  기본 배경: [coincentral.com](https://coincentral.com/paradigm-backs-gte-with-15m-to-build-the-fastest-decentralized-exchange/)
-
-#### 2. 왜 중요한가?  
-- 기존 CEX(중앙화 거래소)는 사용 편의성과 속도는 높으나 자산을 맡겨야 하는 보안 위험이 있다. FTX 사태 등에서 보듯, 거래소가 파산하면 자산도 증발한다.  
-- 기존 DEX(탈중앙화 거래소)는 보안성(자산 직접 관리)은 높으나 주문 처리 속도/사용성에서 크게 뒤쳐진다.  
-- GTE는:  
-  - ‘내 자산은 내가 통제(비커스터디얼)’  
-  - ‘거래는 주식시장만큼 빠르고 편하게(온체인 CLOB, 중앙 지정가 주문서 구조)’  
-  를 동시에 추구한다.
-- 현실 예시: 간편 결제 앱에서 누구나 실시간 송금/거래를 기대하듯, 암호화폐도 온체인에서 “내가 직접 내 돈을 빠르게” 운용하고 싶은 요구.
-
-#### 3. 기술 및 메커니즘
-- **핵심 구조**  
-  - MegaETH(메가이더리움)라는 전용 초고속 블록체인 인프라 위에 구축(이더리움과의 관계는 공식 사이트 기준 ‘독자체인’이 강점)  
-  - 모든 주문 처리(입력~체결~정산)가 온체인에서 즉시 처리되도록 설계
-  - 주문장(Central Limit Order Book, CLOB): 주식시장 등에서와 유사하게 거래 가격별 주문을 쌓고, 맞는 주문을 실시간 체결
-  - 논커스터디얼: 사용자가 거래소에 자산을 맡기지 않고, 직접 자기 지갑(메타마스크 등) 연결로 거래
-- **차별점**  
-  - 기존 DEX 대비 속도(낮은 지연), 높은 확장성, 주문·체결·정산 전체의 투명성  
-  - 기존 ‘AMM(자동화 마켓메이커)’ 기반 DEX(예: 유니스왑) 대비, 전문 트레이더에게 익숙한 오더북 방식  
-  - **기술적으로 중요한 점:** 실제 모든 주문의 온체인 처리와 사용자 경험, 그리고 확장성의 동시 달성(이전 일부 온체인 오더북은 속도 저하/가스비 문제 등의 한계가 있음)
-- **용어설명**  
-  - *On-chain CLOB*: 거래창의 모든 주문을 블록체인에 기록·처리하는 방식. 주문이 투명하게 모두 기록되고 체결도 자동화
-  - *Non-custodial*: 거래소가 고객 자산을 일시도 보관 안함, 거래 실행만 중계
-  
-#### 4. 토크노믹스(토큰 모델)
-- (2025년 7월 기준) 공식 토큰은 런칭되지 않았으며, 토큰 이름·티커·분배 구조·거버넌스 정책 등 전혀 공개된 정보 없음.
-- 업계 관례상, 추후 사용자·리워드·거버넌스용 토큰 도입은 유력(하이퍼리퀴드, dYdX 선례 참조)
-- 공식 발표 전까지 투자/참여 시 투기성 루머에 주의
-
-#### 5. 팀 및 투자자
-- **핵심 인물**  
-  - 공식 GitHub 등에서 구체적 팀원 명단은 미공개, 일부 투자자(예: Guy Young)는 이름이 외부 자료에 노출됨.
-  - 팀 백그라운드는 트레이딩/블록체인 특화 개발자가 주축
-- **비전**  
-  - “탈중앙성과 ‘거래소만큼 빠른 UX’를 모두 만족하는 차세대 글로벌 인프라 구축”  
-  - X(구 트위터) 공식채널서 “Speed+Trustless+Transparency”를 반복 강조  
-- **주요 투자자**  
-  - Tier 1: Paradigm(업계 TOP 벤처, $15M 단독 리드라운드)  
-  - Tier 2: Robot Ventures, Wintermute(유동성 공급+VC 겸업),  
-  - 기타: Flow Traders, IMC Trading 등 실제 마켓메이커 중심의 전략적 투자자 다수  
-  - 펀딩 총액: $25,000,000+ (Pre-seed~SeriesA 포함), [rootdata.com](https://www.rootdata.com/Projects/detail/GTE?k=MTQ4ODc=), [theblock.co](https://www.theblock.co/post/335132/megaeth-based-dex-gte-funding-cobie-echo)
-
-#### 6. 사용자 경험 및 커뮤니티
-- **직접 사용 방법**  
-  - gte.xyz 접속→지갑 연결→빠른 UI에서 직접 거래 테스트 가능(테스트넷 및 일부 메인넷 서비스 진행 중)  
-- **에어드랍/보상 가능성**  
-  - 아직 공식 발표는 없으나,  
-    - 토큰 미상장 상태  
-    - 커뮤니티 펀딩(초기 Echo 라운드) 이력  
-    - Early DEX 사용자 대상 에어드랍이 크립토 업계 관례(하이퍼리퀴드, dYdX 등)  
-    => ‘테스트넷·초기 거래·커뮤니티 활동 등’ 참여자는 잠재적 보상 기회 있음(단, 최종 정책 여부는 추후 확인 필요)
-- **커뮤니티**  
-  - X(트위터)에서 활발한 인게이지, 테스트넷 경험자 리뷰 다수(공식 X: [x.com/gte_xyz](https://x.com/gte_xyz))
-
-#### 7. 시장 내 경쟁 구도 및 리스크
-- **직접 경쟁자**:  
-  - Hyperliquid (온체인 DEX 파생상품 시장 점유율 선두), dYdX(앱체인 기반),  
-  - 기존 대형 DEX(AMM 기반): Uniswap 등
-- **경쟁력**  
-  - 하이퍼리퀴드와 달리 ‘완전 온체인 CLOB’를 추구하며, MegaETH 기반으로 더 낮은 지연/높은 탈중앙성 추구
-  - Paradigm 등 대형 투자자 직·간접 참여로 신뢰도 높음
-- **약점/리스크**  
-  - MegaETH 기반 신규 체인 의존, 유동성 확보 초기 진입장벽  
-  - 네트워크 이슈 혹은 메이저 CEX의 지속적 기술 혁신  
-  - 합의(Consensus)/기술적 결함 드러나면 신뢰저하 가능  
-  - 규제환경 변화, 토큰 미공개→기대 심리 불일치 시 커뮤니티 이탈 우려
-
-#### 8. 용어 FAQ(초보자 전용)
-- **DEX(탈중앙화 거래소)**: 중앙 서버/회사 없이, 블록체인에서 거래자가 직접 거래/자산통제. 보안은 높으나 전통적으로 느렸음 ([coinmarketcap.com](https://coinmarketcap.com/alexandria/article/what-are-decentralized-exchanges-dex), [openware.com](https://www.openware.com/news/articles/the-future-of-decentralized-exchanges-dexs), [blog.chainport.io](https://blog.chainport.io/what-are-dexs))
-- **오더북(CLOB)**: 거래소 내 ‘가격표 게시판’에 여러 사람이 실시간으로 매수/매도 주문을 쌓고, 맞는 주문끼리 자동 체결되는 구조.
-- **Non-custodial**: 거래소가 고객 자산을 잠시도 보관하지 않는 모델(사용자 지갑→직접 거래).
-- **AMM**: 거래소에서 ‘알고리즘’을 통한 자동 유동성 공급/교환구조, 초보자에겐 편하지만 큰 주문엔 슬리피지 등 불리할 수 있음([binance academy](https://academy.binance.com/en/articles/what-is-a-decentralized-exchange-dex), [blog.chainport.io](https://blog.chainport.io/what-are-dexs))
+## GTE 마스터 팩트 시트 (2025년 7월 15일 기준)
 
 ---
 
-**주요 참고**  
-- 공식 웹: [gte.xyz](https://www.gte.xyz/)  
-- 공식 X: [x.com/gte_xyz](https://x.com/gte_xyz)  
-- 외부 투자/시장 기사: [coindesk.com](https://www.coindesk.com/business/2025/06/23/hyperliquid-rival-gte-raises-usd15m-in-series-a-led-by-paradigm), [coincentral.com](https://coincentral.com/paradigm-backs-gte-with-15m-to-build-the-fastest-decentralized-exchange/), [rootdata.com](https://www.rootdata.com/Projects/detail/GTE?k=MTQ4ODc=), [theblock.co](https://www.theblock.co/post/335132/megaeth-based-dex-gte-funding-cobie-echo)  
-- DEX 구조/용어/기본: [coinmarketcap.com](https://coinmarketcap.com/alexandria/article/what-are-decentralized-exchanges-dex), [binance academy](https://academy.binance.com/en/articles/what-is-a-decentralized-exchange-dex), [openware.com](https://www.openware.com/news/articles/the-future-of-decentralized-exchanges-dexs), [blog.chainport.io](https://blog.chainport.io/what-are-dexs)
+### 1. 프로젝트 개요
+
+- **정의:**  
+  GTE(Global Token Exchange)는 완전 비수탁(Non-Custodial), 온체인 주문서 기반 파생상품 거래소(Decentralized Order Book-based Derivatives Exchange, 줄여서 DEX 또는 CLOB DEX)입니다.  
+- **목적 및 필요성:**  
+  중앙화 거래소(Centralized Exchange, CEX) 파산(예: FTX) 또는 해킹으로한 대규모 고객자산 손실 위험을 원천 차단하며, 프로 트레이더들이 CEX에서 기대하는 '초고속·저지연 거래/체결' 경험을 제공하고자 합니다.  
+  - 예시: 은행(중앙화)에 돈을 맡기면 이자나 편의성을 얻지만, 은행이 망하면 돈을 못찾음. GTE는 내 금고(지갑)에 돈을 넣은 채 뉴욕증시 급 투자 환경을 쓰는 것과 유사.
+
+---
+
+### 2. 기술 및 메커니즘
+
+- **핵심 구조:**  
+  - **비수탁(Non-Custodial):** 자산이 항상 본인 지갑에 연결. 거래 과정 전체에 플랫폼이 자금에 개입하지 않음.
+  - **온체인 주문서(Clob)**: 모든 주문 및 체결이 퍼블릭 블록체인에 저장(검증·투명성 보장).
+  - **CEX급 속도/유동성/거래 경험:** DEX 특유의 느림·슬리피지 문제 해소를 위해 오프체인·온체인 구조 효율 결합, 공식적으로 "CEX와 같은 속도/성능"을 추구한다 밝힘. [gte.xyz](https://www.gte.xyz/), [coindesk.com](https://www.coindesk.com/business/2025/06/23/hyperliquid-rival-gte-raises-usd15m-in-series-a-led-by-paradigm)
+  - **파생상품 전문:** 비트코인·이더리움 등 주요 상품의 무기한(Perpetual), 레버리지 등 파생상품에 초점.
+- **기술 차별점:**
+  - **속도/지연:** 중앙화 거래소 수준의 저지연(밀리초 단위) 체결 강조(FTX, Hyperliquid 등과 비교)
+  - **보안&투명성:** 플랫폼에 자산을 맡길 필요가 없어 파산·내부 해킹 리스크 본질적 제거.
+- **용어 해설(초보자용):**
+  - **오더북(Order Book):** "가격과 수량을 적은 매수·매도 대기표", 실시간 경매장 메뉴와 유사.
+  - **비수탁:** "내 계좌(Key)는 내 손안에"—플랫폼이 내 돈을 쥐고 있지 않은 상태.
+
+---
+
+### 3. 토크노믹스 (Tokenomics)
+
+- **토큰 발행**: 2025년 7월 기준, 공식적으로 토큰 발행 혹은 세부 설계(공급량·분배·인플레이션) 없음.  
+- **활용성:**  
+  - DeFi DEX의 일반적 관례로, 토큰이 후일 도입 시 거래 수수료 할인, 거버넌스, LP 보상 등 유틸리티가 생길 가능성은 큼.
+- **에어드랍:**  
+  - 공식 발표 없음. 다만 dYdX·Hyperliquid 등 경쟁사 관례, 투자구조·사용자 유치 패턴상 추후 커뮤니티/테스트넷/초기 참여자 타깃 에어드랍 실시 가능성이 높음.
+
+---
+
+### 4. 팀 및 투자자
+
+- **핵심 인물:**  
+  - **Founder: 0xBurbo ([X 계정](https://x.com/0xBurbo))**  
+    → 프로 트레이딩/온체인 시스템 경험 강조, 세부 커리어 공식화되어 있지 않으나, X상에서 DeFi 트레이딩 인프라 관련 적극 소통.
+  - **Co-founders:** mlunghi2000, moses_gte, enzo_gte  
+    → 각각 스마트컨트랙트/트레이딩 알고리즘/마케팅·커뮤니티 분야 추정 경험 보유(공식 소개 및 익명/가명, X에서 활동)
+- **투자사:**  
+  - **Paradigm(패러다임):** 업계 최대 VC, Uniswap·dYdX 등 투자 이력. 2025년 6월 Series A로 15M USD 투자 리드.  
+  - **Wintermute, Robot Ventures, Flow Traders, IMC Trading, Maven 11 등:** 글로벌 마켓메이커·DeFi 투자 특화 VC/트레이딩 기업.
+  - **누적 투자액:** $25,000,000(2025년 6월 기준 Series A 포함, [coindesk.com](https://www.coindesk.com/business/2025/06/23/hyperliquid-rival-gte-raises-usd15m-in-series-a-led-by-paradigm), [coincentral.com](https://coincentral.com/paradigm-backs-gte-with-15m-to-build-the-fastest-decentralized-exchange/))
+- **팀의 비전:**  
+  - 트레이더에 최적화된 DEX, "누구나 자신의 자산을 직접 관리하며 CEX급 경험을 얻을 수 있는 안전한 시장", FTX사태 반면교사(탈중앙·자산통제), 구조적 혁신, 거래의 민주화 등 강조.
+
+---
+
+### 5. 사용자 및 커뮤니티 (사용자 경험/참여)
+
+- **참여법:**  
+  - 공식 웹사이트([gte.xyz](https://www.gte.xyz/))에서 이더리움(또는 호환) 지갑으로 직접 접속, 실사용(메인넷 혹은 오픈베타) 즉시 거래 가능.  
+  - 사업 단계에 따라 거래대회·커뮤니티 이벤트·테스트넷 등 체험형 활동 수시로 진행.
+- **커뮤니티:**  
+  - X(@gte_xyz)에서 개발 상황·이벤트 등 공지 활발.  
+  - 초기 고급 트레이더·DeFi 매니아 지향 강함, 실사용 테스트환경 제공.
+
+---
+
+### 6. 경쟁 및 리스크
+
+- **경쟁 구도:**  
+  - **하이퍼리퀴드(Hyperliquid):** (2025년 누적 $1T 거래량) 고성능 L1-온체인 DEX의 대표 주자.  
+  - **dYdX:** 코스모스 기반 자체체인 파생 DEX.
+  - **비교 포인트:**
+    - 강점: GTE는 탈중앙·투명성·초고속+비수탁이라는 '최고 CEX맞먹는 DEX' 체험을 표방.
+    - 약점: 시장 진입 후발, 하이퍼리퀴드 등 기존 선두권 거래량 따라잡기 과제, 실운영/확장성 증명 필요(유저스케일 증가시 네트워크 병목 등).
+- **리스크:**  
+  - **기술:** 온체인 체결에도 불구, 네트워크 병목 발생 시 속도 저하/체결 지연 가능성(DEX의 구조적 한계)
+  - **사업:** 기존 시장포화, 마켓메이커 등 경쟁사 대비 후발주자 한계, 거래량 확보와 유저 로열티 확보 필요.
+  - **시장:** 글로벌/미국/유럽 규제, 자금세탁방지 등 파생상품 관련 정책 변화에 취약.
+
+---
+
+### 7. 용어 해설 (초보자용)
+
+- **탈중앙화(Decentralization):**
+  - 한 조직이나 서버가 중심이 되어 관리하는 구조가 아니라, 여러 주체가 네트워크를 평등하게 운영.
+- **파생상품(Derivatives):**
+  - 비트코인, 이더리움 같은 실물 자산이 아니라, 그 가격 변화에 따라 수익이 결정되는 도구(선물·옵션 포함).
+- **비수탁(Non-Custodial):**
+  - 내 자산을 플랫폼(은행·CEX 등)에 맡기지 않고 직접 지갑(금고)에서 통제하는 것.
+- **오더북(Orderbook):**
+  - "누가 무엇을 얼마에 사고/팔겠는지" 적은 실시간 명부, 이 명부를 기준으로 거래가 자동 매칭.
+- **에어드랍(Airdrop):**
+  - 특정 프로젝트가 조건 충족(사용/참여/보유)에 따라 토큰을 무상 배분하는 이벤트.
+
+---
+
+### 참고 출처
+- [gte.xyz 공식](https://www.gte.xyz/)
+- [coindesk.com](https://www.coindesk.com/business/2025/06/23/hyperliquid-rival-gte-raises-usd15m-in-series-a-led-by-paradigm)
+- [coincentral.com](https://coincentral.com/paradigm-backs-gte-with-15m-to-build-the-fastest-decentralized-exchange/)
+- [rootdata.com](https://www.rootdata.com/Projects/detail/GTE?k=MTQ4ODc=)
+- GTE X(트위터) 팀원 계정 다수
+
+---
+
+#### 최종 평가
+GTE는 Paradigm 등 최상위 VC가 베팅한 "On-chain 파생 DEX 차세대 표준" 지위를 목표로, 완전 비수탁·온체인·CEX급 경험이라는 세 마리 토끼를 동시에 겨냥합니다. 실제 메인넷/서비스가 운영 중이며, 토큰/에어드랍 등 추가적 성장 동력은 미확정이나, 시장 잠재력은 상당히 높게 평가할 수 있습니다.  
+향후 메인넷 확장·생태계 구축(특히 토큰 론칭 및 커뮤니티 보상 정책)·신규 규제 동향 관찰이 중요합니다.
