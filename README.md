@@ -52,7 +52,23 @@ cp .env.example .env
     python view_log.py
     ```
 
-## ⚙️ 핵심 개념: 프롬프트 파일 설계
+## ⚙️ 기본 리서치 봇 사용법 (`research.md`)
+
+이 프레임워크의 가장 기본적인 사용법은 `prompts/research.md` 파일을 수정하여 특정 프로젝트를 리서치하는 것입니다.
+
+1.  **`prompts/research.md` 파일 열기:** 텍스트 에디터로 해당 파일을 엽니다.
+2.  **`project info` 블록 수정:** `## prompt1: 심층 분석 및 보고 ##` 섹션 내부에 있는 아래와 같은 `**project info**` 블록을 찾습니다.
+    ```markdown
+    **project info**
+    GTE
+    • 한 줄 소개: Decentralized trading platform
+    ...
+    **end of project info**
+    ```
+3.  **정보 교체:** `GTE` 프로젝트의 예시 정보를 **조사하고 싶은 프로젝트의 정보**로 모두 교체합니다. 프로젝트 이름, 웹사이트, 투자사 등 아는 정보를 최대한 상세히 넣어주면 AI가 더 정확한 결과를 찾아냅니다.
+4.  **봇 실행:** 터미널에서 `python main.py` 명령어를 실행하면, 수정된 정보를 바탕으로 리서치가 자동으로 시작됩니다.
+
+## 🤡 프롬프트 파일 설계
 
 이 시스템의 모든 동작은 `prompts/` 폴더 안의 `.md` 파일로 제어됩니다.
 
@@ -150,7 +166,23 @@ cp .env.example .env
     python view_log.py
     ```
 
-## ⚙️ Core Concept: Designing the Prompt File
+## ⚙️ How to Use the Default Research Bot (`research.md`)
+
+The most basic way to use this framework is to research a specific project by editing the `prompts/research.md` file.
+
+1.  **Open `prompts/research.md`:** Open the file with a text editor.
+2.  **Edit the `project info` Block:** Find the `**project info**` block located inside the `## prompt1: In-depth Analysis and Reporting ##` section.
+    ```markdown
+    **project info**
+    GTE
+    • One-liner: Decentralized trading platform
+    ...
+    **end of project info**
+    ```
+3.  **Replace Information:** Replace the example information for the `GTE` project with the details of the project **you want to research**. The more details you provide (name, website, investors, etc.), the more accurate the AI's results will be.
+4.  **Run the Bot:** Execute `python main.py` in your terminal. The research will start automatically based on the information you provided.
+
+## 🤡 Designing the Prompt File
 
 All operations of this system are controlled by `.md` files in the `prompts/` directory.
 
