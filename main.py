@@ -83,14 +83,18 @@ def parse_prompt_file(filepath, loc_strings):
         # --- 이미지/PDF 입력 파싱 ---
         img_files = []
         pdf_files = []
-        new_lines = []
+        code_files = []
+        new_lines = []        
         for line in clean_text.splitlines():
             img_match = re.match(r"#\s*img\s+(.+)", line, re.IGNORECASE)
             pdf_match = re.match(r"#\s*pdf\s+(.+)", line, re.IGNORECASE)
+            code_match = re.match(r"#\s*code\s+(.+)", line, re.IGNORECASE)
             if img_match:
                 img_files.append(img_match.group(1).strip())
             elif pdf_match:
                 pdf_files.append(pdf_match.group(1).strip())
+            elif code_match:
+                code_files.append(code_match.group(1).strip())
             else:
                 new_lines.append(line)
         prompt_text = '\n'.join(new_lines).strip()
@@ -110,7 +114,8 @@ def parse_prompt_file(filepath, loc_strings):
                 'use_reasoning': use_reasoning,
                 'has_other_ai_info': has_other_ai_info,
                 'img_files': img_files,
-                'pdf_files': pdf_files
+                'pdf_files': pdf_files,
+                'code_files': code_files
             })
 
     if not project_name:
@@ -119,8 +124,22 @@ def parse_prompt_file(filepath, loc_strings):
 
     return project_name, sorted(prompts, key=lambda x: x['id'])
 
-def make_message_content(prompt_text, img_files, pdf_files):
+def make_message_content(prompt_text, img_files, pdf_files, code_files):
     content = []
+    
+    # 코드 첨부
+    for code_path in code_files:
+        if os.path.isfile(code_path):
+            with open(code_path, "r", encoding="utf-8") as f:
+                code_content = f.read()
+            # 코드블럭+파일명 포함
+            content.append({
+                "type": "text",
+                "text": f"[File: {code_path}]\n```python\n{code_content}\n```"
+            })
+        else:
+            print(f"[Warning] Code file not found: {code_path}") 
+
     content.append({"type": "text", "text": prompt_text})
 
     # 이미지 첨부
@@ -360,10 +379,12 @@ def main():
                 
                 img_files = prompt_data.get('img_files', [])
                 pdf_files = prompt_data.get('pdf_files', [])
+                code_files = prompt_data.get('code_files', [])
                 messages = [{"role": "system", "content": system_prompt}]
                 messages.extend(model_histories[model_nickname][-(TRIMMED_HISTORY_COUNT*2):])
 
-                content = make_message_content(user_content, img_files, pdf_files)
+                content = make_message_content(user_content, img_files, pdf_files, code_files)
+                
                 # image/pdf가 없는 경우 기존처럼 string, 그렇지 않으면 [{...}, {...}]
                 if len(content) == 1 and content[0]["type"] == "text":
                     messages.append({"role": "user", "content": content[0]["text"]})

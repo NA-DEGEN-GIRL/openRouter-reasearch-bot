@@ -8,8 +8,10 @@ projects/*
 !projects/gte/**
 !projects/이미지_테스트/
 !projects/pdf_테스트/
+!projects/code_개선/
 !projects/이미지_테스트/**
 !projects/pdf_테스트/**
+!projects/code_개선/**
 model_search_result.txt
 .python-version
 test.py
@@ -19,6 +21,8 @@ res_data_priv
 attachment/*
 !attachment/test.jpg
 !attachment/test.pdf
+!attachment/test.py
 prompts/test/*
 !prompts/test/img.md
 !prompts/test/pdf.md
+!prompts/test/code.md

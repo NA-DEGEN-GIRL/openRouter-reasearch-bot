@@ -1,197 +1,193 @@
 # AI-Forge: AI Workflow Orchestrator
 
-**여러 AI를 동시에 협업/병렬 실행, 이미지를 비롯한 멀티모달 입력까지 단 하나의 프롬프트 설계로 자동화하는 OpenRouter 기반 워크플로 프레임워크**
+**다양한 AI 모델을 병렬 실행하고, 프롬프트 설계만으로 AI 협업, 코드 개선, 멀티모달 분석을 자동화하는 프레임워크입니다.**
 
----
+> **프로젝트 생성 배경:** 이 프로젝트의 전체 코드는 `code_instruction.txt`에 명시된 요구사항 명세서를 기반으로, LLM(AI)과의 협업을 통해 생성되었습니다.
 
-## 🧠 한글 안내
+## ✨ 주요 특징
 
-OpenRouter 기반 LLM들을 prompts/ 폴더의 .md 프롬프트,  
-최신 멀티모달 첨부(# img, # pdf) 및 reasoning/협업 옵션 태그,  
-"비활성화(deactive)"로 섹션 관리까지 모두 CLI에서 자동화할 수 있습니다.
+  - **다중 AI 병렬 처리:** `ai_models.txt`에 명시된 모든 모델에 작업을 동시에 분산하여 처리 속도를 극대화합니다.
+  - **프롬프트 기반 워크플로:** 코드를 수정할 필요 없이, `prompts/` 폴더 안의 마크다운 파일 하나로 전체 작업 흐름(분석, 협업, 출력 형식 등)을 자유롭게 설계하고 제어할 수 있습니다.
+  - **AI 협업 및 검증:** 각 AI가 다른 AI의 답변을 참고하여 자신의 결과를 보강하거나 수정하는 '교차 검증' 단계를 워크플로에 포함시킬 수 있습니다. (`# other_ai_info` 태그 활용)
+  - **멀티모달 입력 지원:** 프롬프트 파일 내에서 `#img`, `#pdf`, `#code` 태그를 사용하여 이미지, PDF, 코드 파일을 AI에게 직접 전달하고 분석시킬 수 있습니다.
+  - **실시간 로그 모니터링:** 메인 프로세스와 별도로, `view_log.py`를 통해 특정 AI의 작업 과정(`reasoning` 포함)을 실시간으로 확인할 수 있습니다.
 
----
+## 🚀 시작하기 (Quick Start)
 
-### ✨ 주요 특징
-
-- ai_models.txt에 명시된 모델들로 **동시 병렬 분석**
-- prompts/ 폴더 .md 프롬프트 설계 하나로 워크플로/분석/검증/창작/합의까지 전체 설계
-- 실시간 reasoning/진행 로그(view_log.py)
-- 이미지/PDF 첨부하면 자동으로 AI multimodal 입력 변환
-- prompts/ 어디든 하위폴더/여러 파일/블록 지정 가능
-- **비활성(deactive) 헤더로 실행에서 자유롭게 단계/파일 제외**
-
----
-
-## 🚀 실행/설정 (Quick Start)
+### 1\. 환경 설정
 
 ```bash
+# 1. 저장소 복제
 git clone https://github.com/NA-DEGEN-GIRL/openRouter-ai-forge.git
 cd openRouter-ai-forge
+
+# 2. 필요 라이브러리 설치
 pip install -r requirements.txt
-cp copy.env .env   # API키 입력
-```
-모델 탐색/지정:  
-```
-python utils/search_ai_models.py
-```
 
-프롬프트(.md)는 반드시 prompts/ 하위에 배치(폴더 가능)  
-```bash
-python main.py
-python main.py --lang en --prompt research_en.md
-python main.py --pdf-engine mistral-ocr --prompt myflow.md
+# 3. .env 파일 설정
+cp .env.example .env
+# nano .env 또는 vim .env 명령어로 .env 파일을 열고 API 키를 입력하세요.
 ```
 
-실시간 reasoning 확인:
-```
-python view_log.py
-```
+### 2\. 설정 파일 준비
 
----
+  - **`ai_models.txt`**: 사용할 AI 모델의 ID를 한 줄에 하나씩 입력합니다. (예: `google/gemini-2.5-pro`)
+  - **`prompts/`**: 실행할 작업 설계도(`.md`)를 이 폴더 안에 넣습니다. `prompts/research.md` 예시를 참고하세요.
 
-## 🏷️ 프롬프트 헤더/옵션 태그 사용법 (중요!)
+### 3\. 봇 실행
 
-### 📌 헤더(블록) 구분 규칙
+  - **기본 실행 (리서치 봇)**
+    ```bash
+    python main.py
+    ```
+  - **언어 및 특정 프롬프트 지정하여 실행**
+    ```bash
+    python main.py --lang en --prompt research_en.md
+    ```
 
-- 모든 프롬프트는 `## ... ##`로 구간(header/블록)을 나누며,  
-   - **`## project name ##`**: 프롬프트 파일 최상단(결과 폴더명이 됨)
-   - **`## promptN: ... ##`**: 워크플로 단계(번호+설명 자유). 번호(1~)에 의해 순서 적용
-   - **`## deactive ... ##`**: 헤더만 `deactive`로 시작하면 파일/단계 무시(실행/로그 모두 해당 없음), 반드시 ##로 구간을 감싸야 함
+### 4\. 실시간 로그 확인 (선택 사항)
 
-- 헤더마다 줄바꿈 뒤로 (본문, 옵션 태그, 첨부파일선언 등 자유롭게 배치)
-- prompts/ 내 하위폴더에도 지원
+  - 새 터미널을 열고 아래 명령어를 실행하면, 특정 모델의 작업 과정을 실시간으로 볼 수 있습니다.
+    ```bash
+    python view_log.py
+    ```
 
-**예시**
+## ⚙️ 핵심 개념: 프롬프트 파일 설계
+
+이 시스템의 모든 동작은 `prompts/` 폴더 안의 `.md` 파일로 제어됩니다.
+
+> **중요:** 모든 프롬프트 파일은 반드시 `prompts/` 폴더 안에 있어야 합니다.
+
 ```markdown
 ## project name ##
-MyProject
+My Awesome Project
 
-## prompt1: 초기분석 ##
+## prompt1: [1단계: 정보 수집] ##
 # reasoning
-# img ./imgs/pic.png
-분석 본문 ...
+# img: path/to/your/image.jpg
+# pdf: path/to/your/document.pdf
+# code: path/to/your/code.py
+[프롬프트 상세 지시사항...]
 
-## prompt2: 종합 ##
+## prompt2: [2단계: 교차 검증] ##
 # other_ai_info
-종합 내용...
-
-## deactive 테스트 ##
-테스트 블록(실행 안 됨)
+[프롬프트 상세 지시사항...]
 ```
 
----
-
-### 📌 [중요] 옵션 태그/첨부파일 기능 안내
-
-각 헤더(프롬프트 단계) 하단에 줄바꿈으로 추가, 원하는 만큼 조합/복수 적용 가능
-
-- `# reasoning`:  
-  해당 AI가 각 프롬프트에 대해 reasoning(추론과정)을 실시간 로그와 파일에 남깁니다.
-- `# other_ai_info`:  
-  현재 단계의 AI가 타 AI의 이전답변을 참고해 협업/교차/최종 합의 분석을 자동으로 진행합니다.
-- `# img [경로/URL]`:  
-  해당 이미지 파일 (로컬 경로 or URL) 첨부, multimodal/비전 처리가 지원되는 모델은 자동 분석 (예: # img images/graph.png)
-- `# pdf [경로]`:  
-  첨부 PDF문서 기반 요약/질문/OCR 등 분석
-
-*이 모든 태그/첨부파일 선언 줄은 실제 프롬프트로 AI에 전달되는 내용에서는 자동 제거되어 프롬프트 오염이 없습니다.*
-
----
+  - `## project name ##`: 작업의 고유 이름. 결과물이 저장될 폴더명으로 사용되므로 **반드시 파일 최상단에 작성해야 합니다.**
+  - `## prompt1 ##`: 각 작업 단계를 정의합니다. 번호와 이름은 자유롭게 지정할 수 있습니다.
+  - **옵션 태그:**
+      - `# reasoning`: AI의 생각 과정을 로그 파일에 기록합니다.
+      - `# other_ai_info`: 이전 단계에서 다른 AI가 생성한 답변을 현재 AI가 참고하도록 합니다.
+      - `# img`, `# pdf`, `# code`: 해당 경로의 파일을 프롬프트에 첨부합니다. (다중 첨부 가능)
 
 ## 🗂️ 주요 파일 구조
 
+  - `main.py`: 메인 실행 스크립트
+  - `view_log.py`: 실시간 로그 뷰어
+  - `localization.py`: 다국어 UI 텍스트
+  - `utils/search_ai_models.py`: 모델 정보 검색 유틸리티
+  - `ai_models.txt`: 사용할 AI 모델 목록
+  - `requirements.txt`: 필요 라이브러리
+  - `.env.example`: `.env` 파일 템플릿
+  - `prompts/`: 프롬프트 설계도(`.md`)를 저장하는 디렉토리
+      - `research.md`: 프로젝트의 긍정/부정적 측면을 모두 분석하고, 최종적으로 상세 보고서, 텔레그램 요약본, 트위터 홍보글을 생성하는 기본 워크플로입니다.
+      - `research_en.md`: 위 `research.md`의 영문 버전입니다.
+
+-----
+
+# AI-Forge: AI Workflow Orchestrator
+
+**A framework that orchestrates multiple AI models to automate user-defined workflows, all through simple prompt design.**
+
+> **About This Project:** The entire codebase for this project was generated in collaboration with an LLM, based on the system requirements specification detailed in `code_instruction_en.txt`.
+
+## ✨ Key Features
+
+  - **Concurrent Multi-AI Processing:** Drastically reduces task time by distributing work to all specified models in `ai_models.txt` simultaneously.
+  - **Prompt-Driven Workflow:** The entire workflow—from analysis and collaboration to output formatting—is controlled by a single Markdown file in the `prompts/` folder, requiring no code changes.
+  - **AI Collaboration & Validation:** Incorporate a "cross-validation" step in your workflow, where each AI references the outputs of other AIs to enrich or correct its own findings (using the `#other_ai_info` tag).
+  - **Multimodal Input Support:** Directly pass images, PDFs, and code files to the AI for analysis by using `#img`, `#pdf`, and `#code` tags within your prompt files.
+  - **Live Log Monitoring:** A separate `view_log.py` script allows for real-time monitoring of any specific model's progress, including its reasoning process, without cluttering the main terminal.
+
+## 🚀 Quick Start
+
+### 1\. Environment Setup
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/NA-DEGEN-GIRL/openRouter-ai-forge.git
+cd openRouter-ai-forge
+
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Configure .env file
+cp .env.example .env
+# Open .env with a text editor (e.g., nano .env) and enter your API key.
 ```
-/
-├── main.py                # 메인(오케스트레이터)
-├── view_log.py            # 실시간 log viewer
-├── localization.py        
-├── utils/
-│   └── search_ai_models.py
-├── ai_models.txt          
-├── requirements.txt
-├── copy.env
-└── prompts/
-    ├── research.md     
-    ├── research_en.md  
-    └── anysubfolder/another.md
-```
 
----
+### 2\. Configuration
 
-# AI-Forge: AI Workflow Orchestrator (English)
+  - **`ai_models.txt`**: List the OpenRouter model IDs you want to use, one per line (e.g., `google/gemini-2.5-pro`).
+  - **`prompts/`**: Place your workflow blueprint (`.md` file) inside this directory. Refer to the `prompts/research_en.md` example.
 
-**Run multiple AIs in parallel, design complex collaborative/multimodal/automated AI workflows—with just prompt files and simple tag lines.**
+### 3\. Run the Bot
 
----
+  - **Default Execution**
+    ```bash
+    python main.py
+    ```
+  - **Specify Language and a Custom Prompt File**
+    ```bash
+    python main.py --lang en --prompt custom_task.md
+    ```
 
-### ✨ Key Features
+### 4\. Monitor Live Logs (Optional)
 
-- Multi-AI parallel execution specified in ai_models.txt
-- **Prompt-driven, declarative workflow**: freely add/edit prompt `.md` files under prompts/ (supporting subfolders!)
-- **Multimodal support**: Attach images (`# img path`) or PDFs (`# pdf path`) per prompt block
-- Real-time log viewing (view_log.py): monitor each AI's progress stepwise
-- **Section skipping**: Any section with header starting `## deactive ... ##` (must use double hash both sides) is ignored (not executed or logged)
-- Prompt files can be nested in subfolders under prompts/
+  - Open a new terminal and run the following command to see a specific model's progress in real-time.
+    ```bash
+    python view_log.py
+    ```
 
----
+## ⚙️ Core Concept: Designing the Prompt File
 
-### 🏷️ Prompt Header & Option Tag Use
+All operations of this system are controlled by `.md` files in the `prompts/` directory.
 
-**1. Section Headers**
+> **Important:** All prompt files must be placed inside the `prompts/` directory.
 
-- Every workflow is set with `## ... ##` double-sharp headers:
-    - `## project name ##` (REQUIRED at file top; defines output directory name)
-    - `## prompt1: ... ##`, `## prompt2: ... ##`, ... (prompt blocks, sequentially sorted by number)
-    - `## deactive ... ##` (skips that section entirely; must end with "##")
-
-**2. Option Tags**
-
-Each prompt step/block (immediately below the header, one per line):
-
-- `# reasoning`: Log model's thinking/reasoning process stepwise
-- `# other_ai_info`: Make this step use/merge other AIs’ prior answers
-- `# img [file path or URL]`: Attach image (local file or http/https)
-- `# pdf [file path]`: Attach PDF for document analysis
-
-All tag lines and attachment lines are stripped from the AI's prompt.  
-Prompt files can be placed anywhere under prompts/ (including subfolders); all major logic is controlled by header/option tags.
-
-**Example**
 ```markdown
 ## project name ##
-SampleProj
+My Awesome Project
 
-## prompt1: Initial analysis ##
+## prompt1: [Step 1: Information Gathering] ##
 # reasoning
-# img ./imgs/logo.png
-Prompt detail here...
+# img: path/to/your/image.jpg
+# pdf: path/to/your/document.pdf
+# code: path/to/your/code.py
+[Detailed instructions for the prompt...]
 
-## prompt2: Summary ##
+## prompt2: [Step 2: Cross-Validation] ##
 # other_ai_info
-Summary here...
-
-## deactive legacy step ##
-(This section will be ignored)
+[Detailed instructions for the prompt...]
 ```
 
----
+  - **`## project name ##`**: A unique name for the task. This **must be the first section** as it is used for the output folder name.
+  - **`## prompt1 ##`**: Defines each step of the workflow. The number and name are fully customizable.
+  - **Option Tags:**
+      - `# reasoning`: Logs the AI's thought process.
+      - `# other_ai_info`: Allows the AI to reference responses from other AIs in the previous step.
+      - `# img`, `# pdf`, `# code`: Attaches the specified file to the prompt. (Multiple attachments are allowed).
 
-### 🗂️ File Structure
+## 🗂️ Key File Structure
 
-```
-/
-├── main.py
-├── view_log.py
-├── localization.py
-├── utils/
-│   └── search_ai_models.py
-├── ai_models.txt
-├── requirements.txt
-├── copy.env
-└── prompts/
-    ├── research.md
-    ├── research_en.md
-    └── subfolder/other.md
-```
----
+  - `main.py`: Main execution script
+  - `view_log.py`: Real-time log viewer
+  - `localization.py`: Multi-language UI text
+  - `utils/search_ai_models.py`: Model search utility
+  - `ai_models.txt`: List of AI models to use
+  - `requirements.txt`: Required packages
+  - `.env.example`: Template for .env file
+  - `prompts/`: Directory for prompt blueprints (`.md`)
+      - `research.md`: The default workflow that analyzes both positive and negative aspects of a project to generate a detailed report, a Telegram summary, and promotional tweets.
+      - `research_en.md`: The English version of `research.md`.
