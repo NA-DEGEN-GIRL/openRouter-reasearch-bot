@@ -9,6 +9,8 @@ from dotenv import load_dotenv
 from openai import OpenAI, APITimeoutError, APIConnectionError
 from tenacity import retry, stop_after_attempt, wait_fixed, retry_if_exception_type
 from localization import STRINGS
+import mimetypes
+import base64
 
 # --- CONFIGURATION ---
 TRIMMED_HISTORY_COUNT = 25 # Number of context history pairs (user/assistant) to maintain.
@@ -78,19 +80,37 @@ def parse_prompt_file(filepath, loc_strings):
         if header.lower().startswith("deactive"):
             continue
 
+        # --- 이미지/PDF 입력 파싱 ---
+        img_files = []
+        pdf_files = []
+        new_lines = []
+        for line in clean_text.splitlines():
+            img_match = re.match(r"#\s*img\s+(.+)", line, re.IGNORECASE)
+            pdf_match = re.match(r"#\s*pdf\s+(.+)", line, re.IGNORECASE)
+            if img_match:
+                img_files.append(img_match.group(1).strip())
+            elif pdf_match:
+                pdf_files.append(pdf_match.group(1).strip())
+            else:
+                new_lines.append(line)
+        prompt_text = '\n'.join(new_lines).strip()
+
         if header.lower() == "project name":
-            project_name = clean_text.strip()
+            project_name = prompt_text.strip()
+
         elif header.lower().startswith("prompt"):
-            use_reasoning = '# reasoning' in clean_text.lower()
-            has_other_ai_info = '# other_ai_info' in clean_text.lower()
-            prompt_content = re.sub(r'#\s*(reasoning|other_ai_info)', '', clean_text, flags=re.IGNORECASE).strip()
+            use_reasoning = '# reasoning' in prompt_text.lower()
+            has_other_ai_info = '# other_ai_info' in prompt_text.lower()
+            prompt_content = re.sub(r'#\s*(reasoning|other_ai_info)', '', prompt_text, flags=re.IGNORECASE).strip()
             
             prompts.append({
                 'id': int(re.search(r'\d+', header).group()), 
                 'name': header.lower(), 
                 'text': prompt_content,
                 'use_reasoning': use_reasoning,
-                'has_other_ai_info': has_other_ai_info
+                'has_other_ai_info': has_other_ai_info,
+                'img_files': img_files,
+                'pdf_files': pdf_files
             })
 
     if not project_name:
@@ -98,6 +118,48 @@ def parse_prompt_file(filepath, loc_strings):
         sys.exit(1)
 
     return project_name, sorted(prompts, key=lambda x: x['id'])
+
+def make_message_content(prompt_text, img_files, pdf_files):
+    content = []
+    content.append({"type": "text", "text": prompt_text})
+
+    # 이미지 첨부
+    for img_path in img_files:
+        if img_path.startswith("http"):
+            content.append({
+                "type": "image_url",
+                "image_url": {"url": img_path}
+            })
+        else:
+            if os.path.isfile(img_path):
+                mime, _ = mimetypes.guess_type(img_path)
+                if not mime:
+                    mime = "image/jpeg"
+                with open(img_path, "rb") as f:
+                    b64 = base64.b64encode(f.read()).decode()
+                data_url = f"data:{mime};base64,{b64}"
+                content.append({
+                    "type": "image_url",
+                    "image_url": {"url": data_url}
+                })
+            else:
+                print(f"[Warning] Image file not found: {img_path}")
+    # PDF 첨부
+    for pdf_path in pdf_files:
+        if os.path.isfile(pdf_path):
+            with open(pdf_path, "rb") as f:
+                b64 = base64.b64encode(f.read()).decode()
+            data_url = f"data:application/pdf;base64,{b64}"
+            content.append({
+                "type": "file",
+                "file": {
+                    "filename": os.path.basename(pdf_path),
+                    "file_data": data_url
+                }
+            })
+        else:
+            print(f"[Warning] PDF file not found: {pdf_path}")
+    return content
 
 def print_divider(char="=", length=80):
     # 구분선 출력
@@ -195,6 +257,10 @@ def main():
         action='store_true',
         help="Skips the collaboration step where AIs reference each other's answers."
     )
+    parser.add_argument(
+        '--pdf-engine', type=str, choices=['pdf-text', 'mistral-ocr', 'native'], default='pdf-text',
+        help="Specify the PDF processing engine (default: pdf-text)."
+    )
     args = parser.parse_args()
 
     # --- 1. 언어 선택 ---
@@ -291,10 +357,20 @@ def main():
                     else:
                         other_responses = [f"--- RESPONSE FROM {nick} ---\n{resp}\n" for nick, resp in last_turn_responses.items() if nick != model_nickname]
                         user_content = f"## PREVIOUS RESPONSES FROM OTHER AIs ##\n{''.join(other_responses)}\n\n## CURRENT REQUEST ##\n{prompt_text}"
-
+                
+                img_files = prompt_data.get('img_files', [])
+                pdf_files = prompt_data.get('pdf_files', [])
                 messages = [{"role": "system", "content": system_prompt}]
                 messages.extend(model_histories[model_nickname][-(TRIMMED_HISTORY_COUNT*2):])
-                messages.append({"role": "user", "content": user_content})
+
+                content = make_message_content(user_content, img_files, pdf_files)
+                # image/pdf가 없는 경우 기존처럼 string, 그렇지 않으면 [{...}, {...}]
+                if len(content) == 1 and content[0]["type"] == "text":
+                    messages.append({"role": "user", "content": content[0]["text"]})
+                else:
+                    messages.append({"role": "user", "content": content})
+
+                #messages.append({"role": "user", "content": user_content})
                 
                 filename_prefix = "final" if is_last_prompt else f"p{prompt_id}"
                 output_path = os.path.join(output_dir, f"{filename_prefix}_{model_nickname}.md")
