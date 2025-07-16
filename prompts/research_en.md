@@ -1,11 +1,8 @@
-아래는 요청하신 내용을 반영한 **영문 번역본**입니다.  
-모든 도입, 정보, 팀 트위터 링크 조사, 날짜 명시, 블록체인 초보자 접근, deactive 섹션 형식까지 원문의 의미를 충실히 살렸습니다.
-
----
-
-```
 ## project name ##
 GTE
+
+## system prompt ##
+You are a professional blockchain project researcher. You must use web search to find the most up-to-date and accurate information.
 
 ## prompt1: In-Depth Analysis & Reporting ##
 # reasoning

@@ -106,6 +106,9 @@ def parse_prompt_file(filepath, loc_strings):
         if header.lower() == "project name":
             project_name = prompt_text.strip()
 
+        if header.lower() == "system prompt":
+            system_prompt = prompt_text.strip()
+
         elif header.lower().startswith("prompt"):
             use_reasoning = '# reasoning' in prompt_text.lower()
             has_other_ai_info = '# other_ai_info' in prompt_text.lower()
@@ -126,7 +129,11 @@ def parse_prompt_file(filepath, loc_strings):
         print(loc_strings["error_no_project_name"])
         sys.exit(1)
 
-    return project_name, sorted(prompts, key=lambda x: x['id'])
+    if not system_prompt:
+        print(loc_strings["error_no_system_prompt"])
+        sys.exit(1)
+
+    return project_name, system_prompt, sorted(prompts, key=lambda x: x['id'])
 
 def make_message_content(prompt_text, img_files, pdf_files, code_files, doc_files):
     content = []
@@ -344,7 +351,7 @@ def main():
 
     model_data = fetch_model_data(loc_strings)
     ai_models = load_ai_models()
-    project_name, prompts = parse_prompt_file(prompt_filepath, loc_strings)
+    project_name, system_prompt, prompts = parse_prompt_file(prompt_filepath, loc_strings)
     
     project_folder_name = re.sub(r'[^\w-]', '_', project_name).lower()
     output_dir = f"projects/{project_folder_name}"
@@ -383,7 +390,6 @@ def main():
         with concurrent.futures.ThreadPoolExecutor(max_workers=len(ai_models)) as executor:
             for model in ai_models:
                 model_nickname = get_model_nickname(model)
-                system_prompt = loc_strings["system_prompt"]
                 
                 if i == 0:
                     user_content = prompt_text

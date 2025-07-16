@@ -1,6 +1,9 @@
 ## project name ##
 GTE
 
+## system prompt ##
+당신은 전문 블록체인 프로젝트 분석가입니다. 반드시 웹 검색을 통해 가장 정확한 최신 정보를 찾아야 합니다.
+
 ## prompt1: 심층 분석 및 보고 ##
 # reasoning
 **project info**
