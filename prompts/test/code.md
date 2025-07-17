@@ -1,6 +1,9 @@
 ## project name ##
 code 개선
 
+## system prompt ##
+당신은 유능한 ai
+
 ## prompt1 ##
 # reasoning
 # code attachment/test.py

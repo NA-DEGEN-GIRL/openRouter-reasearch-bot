@@ -26,3 +26,5 @@ prompts/test/*
 !prompts/test/img.md
 !prompts/test/pdf.md
 !prompts/test/code.md
+backup
+model_cache.json
