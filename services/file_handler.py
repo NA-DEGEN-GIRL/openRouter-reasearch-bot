@@ -68,40 +68,37 @@ class FileHandler:
     
     def _handle_doc_file(self, doc_path: str) -> List[Dict[str, Any]]:
         """Handle document file / 문서 파일 처리"""
+        path = Path(doc_path)
+        if not path.exists():
+            self.logger.error(f"Doc file not found: {doc_path}")
+            raise FileProcessingError(f"Doc file not found: {doc_path}")
+
+        if path.suffix.lower() not in SUPPORTED_DOC_EXTENSIONS:
+            self.logger.error(f"Unsupported doc file type: {doc_path}")
+            raise FileProcessingError(f"Unsupported doc file type: {doc_path}")
+
         try:
-            path = Path(doc_path)
-            if not path.exists():
-                self.logger.warning(f"Doc file not found: {doc_path}")
-                return []
-            
-            # Check file extension / 파일 확장자 확인
-            if path.suffix.lower() not in SUPPORTED_DOC_EXTENSIONS:
-                self.logger.warning(f"Unsupported doc file type: {doc_path}")
-                return []
-            
             content = path.read_text(encoding='utf-8')
             return [{
                 "type": "text",
                 "text": f"[File: {doc_path}]\n```markdown\n{content}\n```"
             }]
-            
         except UnicodeDecodeError as e:
             self.logger.error(f"Error decoding doc file {doc_path}: {e}")
-            return []
+            raise FileProcessingError(f"Error decoding doc file {doc_path}: {e}")
         except Exception as e:
             self.logger.error(f"Error reading doc file {doc_path}: {e}")
-            return []
+            raise FileProcessingError(f"Error reading doc file {doc_path}: {e}")
     
     def _handle_code_file(self, code_path: str) -> List[Dict[str, Any]]:
         """Handle code file / 코드 파일 처리"""
+        path = Path(code_path)
+        if not path.exists():
+            self.logger.error(f"Code file not found: {code_path}")
+            raise FileProcessingError(f"Code file not found: {code_path}")
+
         try:
-            path = Path(code_path)
-            if not path.exists():
-                self.logger.warning(f"Code file not found: {code_path}")
-                return []
-            
             content = path.read_text(encoding='utf-8')
-            
             # Detect language from extension / 확장자에서 언어 감지
             ext = path.suffix.lower()
             lang_map = {
@@ -114,18 +111,16 @@ class FileHandler:
                 '.rs': 'rust'
             }
             language = lang_map.get(ext, 'text')
-            
             return [{
                 "type": "text",
                 "text": f"[File: {code_path}]\n```{language}\n{content}\n```"
             }]
-            
         except UnicodeDecodeError as e:
             self.logger.error(f"Error decoding code file {code_path}: {e}")
-            return []
+            raise FileProcessingError(f"Error decoding code file {code_path}: {e}")
         except Exception as e:
             self.logger.error(f"Error reading code file {code_path}: {e}")
-            return []
+            raise FileProcessingError(f"Error reading code file {code_path}: {e}")
     
     def _handle_image_file(self, img_path: str) -> List[Dict[str, Any]]:
         """Handle image file / 이미지 파일 처리"""
@@ -137,50 +132,43 @@ class FileHandler:
             }]
         
         # Handle local images / 로컬 이미지 처리
+        path = Path(img_path)
+        if not path.exists():
+            self.logger.error(f"Image file not found: {img_path}")
+            raise FileProcessingError(f"Image file not found: {img_path}")
+
+        if path.suffix.lower() not in SUPPORTED_IMAGE_EXTENSIONS:
+            self.logger.error(f"Unsupported image file type: {img_path}")
+            raise FileProcessingError(f"Unsupported image file type: {img_path}")
+
         try:
-            path = Path(img_path)
-            if not path.exists():
-                self.logger.warning(f"Image file not found: {img_path}")
-                return []
-            
-            # Check file extension / 파일 확장자 확인
-            if path.suffix.lower() not in SUPPORTED_IMAGE_EXTENSIONS:
-                self.logger.warning(f"Unsupported image file type: {img_path}")
-                return []
-            
             mime_type, _ = mimetypes.guess_type(img_path)
             if not mime_type:
                 mime_type = "image/jpeg"
-            
-            # Read and encode image / 이미지 읽기 및 인코딩
             with open(path, 'rb') as f:
                 image_data = f.read()
             b64_data = base64.b64encode(image_data).decode('utf-8')
             data_url = f"data:{mime_type};base64,{b64_data}"
-            
             return [{
                 "type": "image_url",
                 "image_url": {"url": data_url}
             }]
-            
         except Exception as e:
             self.logger.error(f"Error processing image file {img_path}: {e}")
-            return []
+            raise FileProcessingError(f"Error processing image file {img_path}: {e}")
     
     def _handle_pdf_file(self, pdf_path: str) -> List[Dict[str, Any]]:
         """Handle PDF file / PDF 파일 처리"""
+        path = Path(pdf_path)
+        if not path.exists():
+            self.logger.error(f"PDF file not found: {pdf_path}")
+            raise FileProcessingError(f"PDF file not found: {pdf_path}")
+
         try:
-            path = Path(pdf_path)
-            if not path.exists():
-                self.logger.warning(f"PDF file not found: {pdf_path}")
-                return []
-            
-            # Read and encode PDF / PDF 읽기 및 인코딩
             with open(path, 'rb') as f:
                 pdf_data = f.read()
             b64_data = base64.b64encode(pdf_data).decode('utf-8')
             data_url = f"data:application/pdf;base64,{b64_data}"
-            
             return [{
                 "type": "file",
                 "file": {
@@ -188,7 +176,7 @@ class FileHandler:
                     "file_data": data_url
                 }
             }]
-            
         except Exception as e:
             self.logger.error(f"Error processing PDF file {pdf_path}: {e}")
-            return []
+            raise FileProcessingError(f"Error processing PDF file {pdf_path}: {e}")
+
