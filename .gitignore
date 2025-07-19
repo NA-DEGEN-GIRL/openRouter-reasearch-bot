@@ -31,3 +31,4 @@ prompts/test/*
 backup
 model_cache.json
 **live_logs**
+openRouter-docs/
