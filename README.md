@@ -1,225 +1,309 @@
-# AI-Forge: AI Workflow Orchestrator
 
-**다양한 AI 모델을 병렬 실행하고, 프롬프트 설계만으로 AI 협업, 코드 개선, 멀티모달 분석을 자동화하는 프레임워크입니다.**
-
-> **프로젝트 생성 배경:** 이 프로젝트의 전체 코드는 `code_instruction.txt`에 명시된 요구사항 명세서를 기반으로, LLM(AI)과의 협업을 통해 생성되었습니다.
-
-## ✨ 주요 특징
-
-  - **다중 AI 병렬 처리:** `ai_models.txt`에 명시된 모든 모델에 작업을 동시에 분산하여 처리 속도를 극대화합니다.
-  - **프롬프트 기반 워크플로:** 코드를 수정할 필요 없이, `prompts/` 폴더 안의 마크다운 파일 하나로 전체 작업 흐름(분석, 협업, 출력 형식 등)을 자유롭게 설계하고 제어할 수 있습니다.
-  - **AI 협업 및 검증:** 각 AI가 다른 AI의 답변을 참고하여 자신의 결과를 보강하거나 수정하는 '교차 검증' 단계를 워크플로에 포함시킬 수 있습니다. (`# other_ai_info` 태그 활용)
-  - **멀티모달 입력 지원:** 프롬프트 파일 내에서 `#img`, `#pdf`, `#code` 태그를 사용하여 이미지, PDF, 코드 파일을 AI에게 직접 전달하고 분석시킬 수 있습니다.
-  - **실시간 로그 모니터링:** 메인 프로세스와 별도로, `view_log.py`를 통해 특정 AI의 작업 과정(`reasoning` 포함)을 실시간으로 확인할 수 있습니다.
-
-## 🚀 시작하기 (Quick Start)
-
-### 1\. 환경 설정
-
+### 4. 환경 설정
 ```bash
-# 1. 저장소 복제
-git clone https://github.com/NA-DEGEN-GIRL/openRouter-ai-forge.git
-cd openRouter-ai-forge
-
-# 2. 필요 라이브러리 설치
-pip install -r requirements.txt
-
-# 3. .env 파일 설정
 cp .env.example .env
-# nano .env 또는 vim .env 명령어로 .env 파일을 열고 API 키를 입력하세요.
 ```
 
-### 2\. 설정 파일 준비
+`.env` 파일을 열고 OpenRouter API 키를 입력하세요:
+```
+OPENROUTER_API_KEY=your_api_key_here
+```
 
-  - **`ai_models.txt`**: 사용할 AI 모델의 ID를 한 줄에 하나씩 입력합니다. (예: `google/gemini-2.5-pro`)
-  - **`prompts/`**: 실행할 작업 설계도(`.md`)를 이 폴더 안에 넣습니다. `prompts/research.md` 예시를 참고하세요.
+### 5. AI 모델 설정
+`ai_models.txt` 파일에 사용할 모델을 한 줄에 하나씩 입력:
+```
+google/gemini-2.0-flash-thinking-exp:free
+anthropic/claude-3.5-sonnet
+openai/gpt-4-turbo
+```
 
-### 3\. 봇 실행
+## 사용법 및 예시
 
-  - **기본 실행 (리서치 봇)**
-    ```bash
-    python main.py
-    ```
-  - **언어 및 특정 프롬프트 지정하여 실행**
-    ```bash
-    python main.py --lang en --prompt research_en.md
-    ```
+### 기본 실행
+```bash
+python main.py
+```
 
-### 4\. 실시간 로그 확인 (선택 사항)
+실행하면 다음과 같은 선택 화면이 나타납니다:
+1. 언어 선택 (한국어/영어)
+2. 봇 모드 선택 (표준 리서치 봇/커스텀 프롬프트)
 
-  - 새 터미널을 열고 아래 명령어를 실행하면, 특정 모델의 작업 과정을 실시간으로 볼 수 있습니다.
-    ```bash
-    python view_log.py
-    ```
+### 명령줄 옵션
+```bash
+# 언어와 프롬프트 파일 직접 지정
+python main.py --lang ko --prompt my_custom.md
 
-## ⚙️ 기본 리서치 봇 사용법 (`research.md`)
+# AI 협업 비활성화
+python main.py --no-collaboration
 
-이 프레임워크의 가장 기본적인 사용법은 `prompts/research.md` 파일을 수정하여 특정 프로젝트를 리서치하는 것입니다.
+# PDF 처리 엔진 지정
+python main.py --pdf-engine mistral-ocr
+```
 
-1.  **`prompts/research.md` 파일 열기:** 텍스트 에디터로 해당 파일을 엽니다.
-2.  **`project info` 블록 수정:** `## prompt1: 심층 분석 및 보고 ##` 섹션 내부에 있는 아래와 같은 `**project info**` 블록을 찾습니다.
-    ```markdown
-    **project info**
-    GTE
-    • 한 줄 소개: Decentralized trading platform
-    ...
-    **end of project info**
-    ```
-3.  **정보 교체:** `GTE` 프로젝트의 예시 정보를 **조사하고 싶은 프로젝트의 정보**로 모두 교체합니다. 프로젝트 이름, 웹사이트, 투자사 등 아는 정보를 최대한 상세히 넣어주면 AI가 더 정확한 결과를 찾아냅니다.
-4.  **봇 실행:** 터미널에서 `python main.py` 명령어를 실행하면, 수정된 정보를 바탕으로 리서치가 자동으로 시작됩니다.
+### 프롬프트 파일 작성법
 
-## 🤡 프롬프트 파일 설계
+프롬프트 파일은 `prompts/` 폴더 안에 `.md` 파일로 작성합니다.
 
-이 시스템의 모든 동작은 `prompts/` 폴더 안의 `.md` 파일로 제어됩니다.
+#### 기본 구조
+```markdown
+## project name ##
+내 프로젝트 이름
 
-> **중요:** 모든 프롬프트 파일은 반드시 `prompts/` 폴더 안에 있어야 합니다.
+## system prompt ##
+당신은 전문 분석가입니다. 정확하고 상세한 분석을 제공하세요.
+
+## prompt1: 첫 번째 작업 ##
+# reasoning
+프로젝트에 대한 기본 정보를 수집하고 분석하세요.
+
+## prompt2: 두 번째 작업 ##
+# other_ai_info
+이전 분석을 바탕으로 심층 분석을 수행하세요.
+```
+
+#### 특수 태그 설명
+
+1. **`# reasoning`**: AI의 사고 과정을 로그에 기록
+2. **`# other_ai_info`**: 이전 단계의 다른 AI 응답을 참조
+3. **파일 첨부 태그**:
+   - `# img: path/to/image.jpg` - 이미지 첨부
+   - `# pdf: path/to/document.pdf` - PDF 첨부
+   - `# code: path/to/script.py` - 코드 파일 첨부
+   - `# doc: path/to/readme.md` - 문서 파일 첨부
+
+### 기본 예시: research.md
+
+`prompts/research.md`는 프로젝트 분석을 위한 기본 템플릿입니다:
 
 ```markdown
 ## project name ##
-My Awesome Project
+GTE
 
-## prompt1: [1단계: 정보 수집] ##
+## system prompt ##
+당신은 전문 블록체인 프로젝트 분석가입니다...
+
+## prompt1: 심층 분석 및 보고 ##
 # reasoning
-# img: path/to/your/image.jpg
-# pdf: path/to/your/document.pdf
-# code: path/to/your/code.py
-[프롬프트 상세 지시사항...]
-
-## prompt2: [2단계: 교차 검증] ##
-# other_ai_info
-[프롬프트 상세 지시사항...]
+**project info**
+GTE
+• 한 줄 소개: Decentralized trading platform
+• Tag: DeFi, DEX
+• web: https://www.gte.xyz/
+...
+**end of project info**
 ```
 
-  - `## project name ##`: 작업의 고유 이름. 결과물이 저장될 폴더명으로 사용되므로 **반드시 파일 최상단에 작성해야 합니다.**
-  - `## prompt1 ##`: 각 작업 단계를 정의합니다. 번호와 이름은 자유롭게 지정할 수 있습니다.
-  - **옵션 태그:**
-      - `# reasoning`: AI의 생각 과정을 로그 파일에 기록합니다.
-      - `# other_ai_info`: 이전 단계에서 다른 AI가 생성한 답변을 현재 AI가 참고하도록 합니다.
-      - `# img`, `# pdf`, `# code`: 해당 경로의 파일을 프롬프트에 첨부합니다. (다중 첨부 가능)
+이 예시를 사용하려면:
+1. `**project info**`와 `**end of project info**` 사이의 내용을 분석하려는 프로젝트 정보로 교체
+2. 프로젝트 이름, 웹사이트, 투자자 정보 등을 입력
+3. `python main.py` 실행
 
-## 🗂️ 주요 파일 구조
+### 출력 결과
 
-  - `main.py`: 메인 실행 스크립트
-  - `view_log.py`: 실시간 로그 뷰어
-  - `localization.py`: 다국어 UI 텍스트
-  - `utils/search_ai_models.py`: 모델 정보 검색 유틸리티
-  - `ai_models.txt`: 사용할 AI 모델 목록
-  - `requirements.txt`: 필요 라이브러리
-  - `.env.example`: `.env` 파일 템플릿
-  - `prompts/`: 프롬프트 설계도(`.md`)를 저장하는 디렉토리
-      - `research.md`: 프로젝트의 긍정/부정적 측면을 모두 분석하고, 최종적으로 상세 보고서, 텔레그램 요약본, 트위터 홍보글을 생성하는 기본 워크플로입니다.
-      - `research_en.md`: 위 `research.md`의 영문 버전입니다.
+실행이 완료되면 `projects/프로젝트명/` 폴더에 다음 파일들이 생성됩니다:
+- `p1_모델명.md`: 첫 번째 프롬프트 결과
+- `p2_모델명.md`: 두 번째 프롬프트 결과
+- `final_모델명.md`: 최종 결과
+- `live_logs/모델명.log`: 실시간 처리 로그
 
------
+## 의존성 및 요구사항
+
+### Python 버전
+- Python 3.8 이상
+
+### 주요 라이브러리
+- `openai`: OpenRouter API 통신
+- `aiohttp`: 비동기 HTTP 요청
+- `python-dotenv`: 환경 변수 관리
+- `tenacity`: API 재시도 로직
+
+### API 요구사항
+- OpenRouter API 키 필요
+- 인터넷 연결 필수
+
+## 문제 해결 (FAQ)
+
+### Q: API 키 오류가 발생합니다
+A: `.env` 파일에 `OPENROUTER_API_KEY`가 올바르게 설정되었는지 확인하세요.
+
+### Q: 특정 모델이 작동하지 않습니다
+A: `ai_models.txt`의 모델 ID가 정확한지 확인하세요. OpenRouter에서 지원하는 모델 목록을 확인하세요.
+
+### Q: 파일 첨부가 작동하지 않습니다
+A: 파일 경로가 정확한지, 파일이 존재하는지 확인하세요. 상대 경로는 프로젝트 루트 기준입니다.
+
+### Q: 메모리 부족 오류가 발생합니다
+A: 동시에 실행하는 모델 수를 줄이거나, 더 작은 모델을 사용하세요.
+
+---
 
 # AI-Forge: AI Workflow Orchestrator
 
-**A framework that orchestrates multiple AI models to automate user-defined workflows, all through simple prompt design.**
+A framework that executes multiple AI models concurrently and automates complex AI collaboration workflows with a single prompt file.
 
-> **About This Project:** The entire codebase for this project was generated in collaboration with an LLM, based on the system requirements specification detailed in `code_instruction_en.txt`.
+## Key Features
 
-## ✨ Key Features
+- **Parallel Multi-AI Processing**: Execute the same task across multiple AI models simultaneously to reduce processing time
+- **Prompt-Driven Workflow**: Define entire workflows using markdown files
+- **AI Collaboration**: Enhance results by allowing AIs to reference responses from previous steps
+- **Multimodal Input**: Pass images, PDFs, code, and documents directly to AI
+- **Real-time Log Monitoring**: Track each AI's progress in real-time
 
-  - **Concurrent Multi-AI Processing:** Drastically reduces task time by distributing work to all specified models in `ai_models.txt` simultaneously.
-  - **Prompt-Driven Workflow:** The entire workflow—from analysis and collaboration to output formatting—is controlled by a single Markdown file in the `prompts/` folder, requiring no code changes.
-  - **AI Collaboration & Validation:** Incorporate a "cross-validation" step in your workflow, where each AI references the outputs of other AIs to enrich or correct its own findings (using the `#other_ai_info` tag).
-  - **Multimodal Input Support:** Directly pass images, PDFs, and code files to the AI for analysis by using `#img`, `#pdf`, and `#code` tags within your prompt files.
-  - **Live Log Monitoring:** A separate `view_log.py` script allows for real-time monitoring of any specific model's progress, including its reasoning process, without cluttering the main terminal.
+## Installation Guide
 
-## 🚀 Quick Start
-
-### 1\. Environment Setup
-
+### 1. Clone Repository
 ```bash
-# 1. Clone the repository
-git clone https://github.com/NA-DEGEN-GIRL/openRouter-ai-forge.git
-cd openRouter-ai-forge
-
-# 2. Install dependencies
-pip install -r requirements.txt
-
-# 3. Configure .env file
-cp .env.example .env
-# Open .env with a text editor (e.g., nano .env) and enter your API key.
+git clone https://github.com/your-username/ai-forge.git
+cd ai-forge
 ```
 
-### 2\. Configuration
+### 2. Set Up Python Virtual Environment (Recommended)
+```bash
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+# or
+venv\Scripts\activate  # Windows
+```
 
-  - **`ai_models.txt`**: List the OpenRouter model IDs you want to use, one per line (e.g., `google/gemini-2.5-pro`).
-  - **`prompts/`**: Place your workflow blueprint (`.md` file) inside this directory. Refer to the `prompts/research_en.md` example.
+### 3. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
 
-### 3\. Run the Bot
+### 4. Configure Environment
+```bash
+cp .env.example .env
+```
 
-  - **Default Execution**
-    ```bash
-    python main.py
-    ```
-  - **Specify Language and a Custom Prompt File**
-    ```bash
-    python main.py --lang en --prompt custom_task.md
-    ```
+Open `.env` file and enter your OpenRouter API key:
+```
+OPENROUTER_API_KEY=your_api_key_here
+```
 
-### 4\. Monitor Live Logs (Optional)
+### 5. Configure AI Models
+Add models to `ai_models.txt`, one per line:
+```
+google/gemini-2.0-flash-thinking-exp:free
+anthropic/claude-3.5-sonnet
+openai/gpt-4-turbo
+```
 
-  - Open a new terminal and run the following command to see a specific model's progress in real-time.
-    ```bash
-    python view_log.py
-    ```
+## Usage and Examples
 
-## ⚙️ How to Use the Default Research Bot (`research.md`)
+### Basic Execution
+```bash
+python main.py
+```
 
-The most basic way to use this framework is to research a specific project by editing the `prompts/research.md` file.
+When executed, you'll see:
+1. Language selection (Korean/English)
+2. Bot mode selection (Standard research bot/Custom prompt)
 
-1.  **Open `prompts/research.md`:** Open the file with a text editor.
-2.  **Edit the `project info` Block:** Find the `**project info**` block located inside the `## prompt1: In-depth Analysis and Reporting ##` section.
-    ```markdown
-    **project info**
-    GTE
-    • One-liner: Decentralized trading platform
-    ...
-    **end of project info**
-    ```
-3.  **Replace Information:** Replace the example information for the `GTE` project with the details of the project **you want to research**. The more details you provide (name, website, investors, etc.), the more accurate the AI's results will be.
-4.  **Run the Bot:** Execute `python main.py` in your terminal. The research will start automatically based on the information you provided.
+### Command Line Options
+```bash
+# Specify language and prompt file directly
+python main.py --lang en --prompt my_custom.md
 
-## 🤡 Designing the Prompt File
+# Disable AI collaboration
+python main.py --no-collaboration
 
-All operations of this system are controlled by `.md` files in the `prompts/` directory.
+# Specify PDF processing engine
+python main.py --pdf-engine mistral-ocr
+```
 
-> **Important:** All prompt files must be placed inside the `prompts/` directory.
+### Writing Prompt Files
+
+Prompt files should be written as `.md` files in the `prompts/` folder.
+
+#### Basic Structure
+```markdown
+## project name ##
+My Project Name
+
+## system prompt ##
+You are a professional analyst. Provide accurate and detailed analysis.
+
+## prompt1: First Task ##
+# reasoning
+Collect and analyze basic information about the project.
+
+## prompt2: Second Task ##
+# other_ai_info
+Perform in-depth analysis based on previous analysis.
+```
+
+#### Special Tags
+
+1. **`# reasoning`**: Records AI's thinking process in logs
+2. **`# other_ai_info`**: References other AI responses from previous steps
+3. **File Attachment Tags**:
+   - `# img: path/to/image.jpg` - Attach image
+   - `# pdf: path/to/document.pdf` - Attach PDF
+   - `# code: path/to/script.py` - Attach code file
+   - `# doc: path/to/readme.md` - Attach document file
+
+### Default Example: research.md
+
+`prompts/research.md` is the default template for project analysis:
 
 ```markdown
 ## project name ##
-My Awesome Project
+GTE
 
-## prompt1: [Step 1: Information Gathering] ##
+## system prompt ##
+You are a professional blockchain project analyst...
+
+## prompt1: In-depth Analysis and Report ##
 # reasoning
-# img: path/to/your/image.jpg
-# pdf: path/to/your/document.pdf
-# code: path/to/your/code.py
-[Detailed instructions for the prompt...]
-
-## prompt2: [Step 2: Cross-Validation] ##
-# other_ai_info
-[Detailed instructions for the prompt...]
+**project info**
+GTE
+• One-liner: Decentralized trading platform
+• Tag: DeFi, DEX
+• web: https://www.gte.xyz/
+...
+**end of project info**
 ```
 
-  - **`## project name ##`**: A unique name for the task. This **must be the first section** as it is used for the output folder name.
-  - **`## prompt1 ##`**: Defines each step of the workflow. The number and name are fully customizable.
-  - **Option Tags:**
-      - `# reasoning`: Logs the AI's thought process.
-      - `# other_ai_info`: Allows the AI to reference responses from other AIs in the previous step.
-      - `# img`, `# pdf`, `# code`: Attaches the specified file to the prompt. (Multiple attachments are allowed).
+To use this example:
+1. Replace content between `**project info**` and `**end of project info**` with your project's information
+2. Enter project name, website, investor information, etc.
+3. Run `python main.py`
 
-## 🗂️ Key File Structure
+### Output Results
 
-  - `main.py`: Main execution script
-  - `view_log.py`: Real-time log viewer
-  - `localization.py`: Multi-language UI text
-  - `utils/search_ai_models.py`: Model search utility
-  - `ai_models.txt`: List of AI models to use
-  - `requirements.txt`: Required packages
-  - `.env.example`: Template for .env file
-  - `prompts/`: Directory for prompt blueprints (`.md`)
-      - `research.md`: The default workflow that analyzes both positive and negative aspects of a project to generate a detailed report, a Telegram summary, and promotional tweets.
-      - `research_en.md`: The English version of `research.md`.
+Upon completion, the following files are created in `projects/project_name/`:
+- `p1_modelname.md`: First prompt results
+- `p2_modelname.md`: Second prompt results
+- `final_modelname.md`: Final results
+- `live_logs/modelname.log`: Real-time processing logs
+
+## Dependencies and Requirements
+
+### Python Version
+- Python 3.8 or higher
+
+### Main Libraries
+- `openai`: OpenRouter API communication
+- `aiohttp`: Asynchronous HTTP requests
+- `python-dotenv`: Environment variable management
+- `tenacity`: API retry logic
+
+### API Requirements
+- OpenRouter API key required
+- Internet connection required
+
+## Troubleshooting (FAQ)
+
+### Q: I'm getting API key errors
+A: Ensure `OPENROUTER_API_KEY` is correctly set in your `.env` file.
+
+### Q: A specific model isn't working
+A: Verify the model ID in `ai_models.txt` is correct. Check OpenRouter's supported models list.
+
+### Q: File attachments aren't working
+A: Check that file paths are correct and files exist. Relative paths are based on project root.
+
+### Q: I'm getting out of memory errors
+A: Reduce the number of concurrent models or use smaller models.
+
+---

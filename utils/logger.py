@@ -14,22 +14,17 @@ def setup_logger(name: str, level: int = logging.INFO) -> logging.Logger:
     Setup and return a logger instance.
     로거 인스턴스를 설정하고 반환.
     """
-    # Create logger / 로거 생성
     logger = logging.getLogger(name)
     logger.setLevel(level)
     
-    # Remove existing handlers / 기존 핸들러 제거
     logger.handlers = []
     
-    # Create console handler / 콘솔 핸들러 생성
     console_handler = logging.StreamHandler(sys.stdout)
     console_handler.setLevel(level)
     
-    # Create formatter / 포맷터 생성
     formatter = logging.Formatter(LOG_FORMAT, LOG_DATE_FORMAT)
     console_handler.setFormatter(formatter)
     
-    # Add handler to logger / 로거에 핸들러 추가
     logger.addHandler(console_handler)
     
     return logger

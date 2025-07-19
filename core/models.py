@@ -5,6 +5,8 @@ Data models using dataclasses.
 from dataclasses import dataclass, field
 from typing import List, Optional, Dict, Any
 from pathlib import Path
+import json
+import re
 
 
 @dataclass
@@ -47,7 +49,7 @@ class Message:
     채팅 메시지를 나타냄.
     """
     role: str
-    content: Any  # Can be string or list of content parts / 문자열 또는 콘텐츠 부분 리스트
+    content: Any
 
 
 @dataclass
@@ -60,3 +62,57 @@ class APIResponse:
     response_text: Optional[str]
     user_content: Any
     error: Optional[Exception] = None
+
+
+# REFACTORED: Added PromptResult for structured data pipeline
+@dataclass
+class PromptResult:
+    """
+    Result from a prompt execution with structured data support.
+    구조화된 데이터를 지원하는 프롬프트 실행 결과.
+    """
+    model_nickname: str
+    raw_text: str
+    structured_data: Optional[Dict[str, Any]] = None
+    error: Optional[Exception] = None
+    
+    @staticmethod
+    def from_response(response: APIResponse) -> 'PromptResult':
+        """Create PromptResult from APIResponse / APIResponse에서 PromptResult 생성"""
+        if response.error or not response.response_text:
+            return PromptResult(
+                model_nickname=response.model_nickname,
+                raw_text="",
+                error=response.error
+            )
+        
+        # REFACTORED: Enhanced JSON extraction from gemini-2.5-pro
+        structured_data = None
+        text = response.response_text
+        
+        json_match = re.search(r'```json\s*\n(.*?)\n```', text, re.DOTALL)
+        if json_match:
+            try:
+                structured_data = json.loads(json_match.group(1))
+            except json.JSONDecodeError:
+                pass
+        
+        return PromptResult(
+            model_nickname=response.model_nickname,
+            raw_text=text,
+            structured_data=structured_data
+        )
+
+
+# REFACTORED: Added ProjectContext for immutable configuration
+@dataclass
+class ProjectContext:
+    """
+    Immutable project execution context.
+    불변 프로젝트 실행 컨텍스트.
+    """
+    project_name: str
+    system_prompt: str
+    output_dir: Path
+    live_log_dir: Path
+    context_optional: str = ''

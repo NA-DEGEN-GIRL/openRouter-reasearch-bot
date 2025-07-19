@@ -80,18 +80,13 @@ def select_prompt_file(lang: str) -> Path:
 
 async def main() -> None:
     """Main execution function / 메인 실행 함수"""
-    # Parse arguments / 인자 파싱
     args = parse_arguments()
-    
-    # Setup logger / 로거 설정
     logger = setup_logger('ai_research_bot')
     
     try:
-        # Language selection / 언어 선택
         lang = args.lang or select_language()
         loc_strings = STRINGS[lang]
         
-        # Prompt file selection / 프롬프트 파일 선택
         if args.prompt:
             prompt_filepath = Path('prompts') / args.prompt
         else:
@@ -102,7 +97,6 @@ async def main() -> None:
             prompt_filepath=prompt_filepath
         ))
         
-        # Initialize configuration / 설정 초기화
         config = Config(
             language=lang,
             prompt_filepath=prompt_filepath,
@@ -110,7 +104,6 @@ async def main() -> None:
             pdf_engine=args.pdf_engine
         )
         
-        # Create and run orchestrator / 오케스트레이터 생성 및 실행
         orchestrator = ProjectOrchestrator(config)
         await orchestrator.run()
         

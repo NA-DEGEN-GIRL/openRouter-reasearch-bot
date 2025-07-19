@@ -9,6 +9,8 @@ projects/*
 !projects/이미지_테스트/
 !projects/pdf_테스트/
 !projects/code_개선/
+!projects/ai_orchestrator_improve/
+!projects/ai_orchestrator_improve/**
 !projects/이미지_테스트/**
 !projects/pdf_테스트/**
 !projects/code_개선/**
@@ -28,3 +30,4 @@ prompts/test/*
 !prompts/test/code.md
 backup
 model_cache.json
+**live_logs**

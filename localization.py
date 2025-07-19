@@ -1,4 +1,3 @@
-
 STRINGS = {
     'en': {
         "select_language": "Select language (1: Korean, 2: English): ",

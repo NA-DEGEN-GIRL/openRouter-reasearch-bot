@@ -1,5 +1,5 @@
 ## project name ##
-ask_anything
+ask_anything_07
 
 ## context ##
 ask anything!
@@ -8,11 +8,16 @@ ask anything!
 You are a helpful AI assistant.
 
 ## prompt1 ##
-# reasoning
-# doc ./prompts/code_refactor_02.md
-ai 협업 프로그램에서 사용할 프롬프트 파일이야. 이를 평가해줘봐.
+아래는 LLM에게 지시하고자 하는 사항인데, 아래 내가 적은 문구를 보고 명확하게 적어줘 파이썬을 예시로 적은거야. 파이썬 말고도 여러 언어를 쓸수도 있는 상황이야. 그리고 코드 블록 위에 반드시 ### FILE 파일패쓰를 적어줘야하는거고
+
+<너가수정할문구>
+- 코드 출력 시 다음과 같이 ### FILE + file path 를 적은뒤 그리고 뒤에 코드를 출력한다
+     ### FILE ./src/hello.py
+     ```python
+     print("hello world")
+     ```
+</너가수정할문구>
 
 ## prompt2 ##
-# reasoning
 # other_ai_info
-다른 ai 내용들을 참고해서 다시 평가해줘.
+다른 ai 내용들을 참고해서 다시 답변해줘.

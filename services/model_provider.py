@@ -29,7 +29,6 @@ class ModelDataProvider:
         Get model data with caching.
         캐싱을 사용하여 모델 데이터 가져오기.
         """
-        # Check cache validity / 캐시 유효성 확인
         if self._is_cache_valid():
             try:
                 with open(self.cache_file, 'r', encoding='utf-8') as f:
@@ -39,7 +38,6 @@ class ModelDataProvider:
             except Exception as e:
                 self.logger.warning(f"Failed to load cache: {e}")
         
-        # Fetch fresh data / 새 데이터 가져오기
         print(loc_strings["fetching_models"])
         try:
             async with aiohttp.ClientSession() as session:
@@ -56,7 +54,6 @@ class ModelDataProvider:
                 for model in models_raw
             }
             
-            # Save to cache / 캐시에 저장
             self._save_cache(model_data)
             
             return model_data
@@ -75,7 +72,6 @@ class ModelDataProvider:
         if not self.cache_file.exists():
             return False
         
-        # Check file age / 파일 나이 확인
         file_age = time.time() - os.path.getmtime(self.cache_file)
         return file_age < MODEL_CACHE_TTL
     

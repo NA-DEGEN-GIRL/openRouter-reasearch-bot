@@ -37,30 +37,24 @@ class FileHandler:
         """
         content = []
         
-        # Process document files / 문서 파일 처리
         if doc_files:
             for doc_path in doc_files:
                 content.extend(self._handle_doc_file(doc_path))
         
-        # Process code files / 코드 파일 처리
         if code_files:
             for code_path in code_files:
                 content.extend(self._handle_code_file(code_path))
         
-        # Add main text / 메인 텍스트 추가
         content.append({"type": "text", "text": prompt_text})
         
-        # Process image files / 이미지 파일 처리
         if img_files:
             for img_path in img_files:
                 content.extend(self._handle_image_file(img_path))
         
-        # Process PDF files / PDF 파일 처리
         if pdf_files:
             for pdf_path in pdf_files:
                 content.extend(self._handle_pdf_file(pdf_path))
         
-        # Return simple string if only text / 텍스트만 있으면 단순 문자열 반환
         if len(content) == 1 and content[0]["type"] == "text":
             return content[0]["text"]
         
@@ -99,7 +93,6 @@ class FileHandler:
 
         try:
             content = path.read_text(encoding='utf-8')
-            # Detect language from extension / 확장자에서 언어 감지
             ext = path.suffix.lower()
             lang_map = {
                 '.py': 'python',
@@ -124,14 +117,12 @@ class FileHandler:
     
     def _handle_image_file(self, img_path: str) -> List[Dict[str, Any]]:
         """Handle image file / 이미지 파일 처리"""
-        # Handle URL images / URL 이미지 처리
         if img_path.startswith("http"):
             return [{
                 "type": "image_url",
                 "image_url": {"url": img_path}
             }]
         
-        # Handle local images / 로컬 이미지 처리
         path = Path(img_path)
         if not path.exists():
             self.logger.error(f"Image file not found: {img_path}")
@@ -179,4 +170,3 @@ class FileHandler:
         except Exception as e:
             self.logger.error(f"Error processing PDF file {pdf_path}: {e}")
             raise FileProcessingError(f"Error processing PDF file {pdf_path}: {e}")
-
