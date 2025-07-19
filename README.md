@@ -1,3 +1,35 @@
+# AI-Forge: AI 워크플로우 오케스트레이터
+
+여러 AI 모델을 동시에 실행하고, 프롬프트 파일 하나로 복잡한 AI 협업 워크플로우를 자동화하는 프레임워크입니다.
+
+## 주요 기능
+
+- **다중 AI 병렬 처리**: 여러 AI 모델에 동일한 작업을 동시에 요청하여 처리 시간 단축
+- **프롬프트 기반 워크플로우**: 마크다운 파일로 전체 작업 흐름을 정의
+- **AI 간 협업**: 이전 단계의 AI 응답을 다음 단계에서 참조하여 결과 개선
+- **멀티모달 입력**: 이미지, PDF, 코드, 문서 파일을 AI에게 직접 전달
+- **실시간 로그 모니터링**: 각 AI의 작업 진행 상황을 실시간으로 확인
+
+## 설치 가이드
+
+### 1. 저장소 복제
+```bash
+git clone https://github.com/your-username/ai-forge.git
+cd ai-forge
+```
+
+### 2. Python 가상 환경 설정 (권장)
+```bash
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+# 또는
+venv\Scripts\activate  # Windows
+```
+
+### 3. 의존성 설치
+```bash
+pip install -r requirements.txt
+```
 
 ### 4. 환경 설정
 ```bash
@@ -305,5 +337,3 @@ A: Check that file paths are correct and files exist. Relative paths are based o
 
 ### Q: I'm getting out of memory errors
 A: Reduce the number of concurrent models or use smaller models.
-
----
