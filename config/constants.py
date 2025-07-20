@@ -15,7 +15,7 @@ TRIMMED_HISTORY_COUNT = 25
 # File Processing / 파일 처리
 SUPPORTED_IMAGE_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.gif', '.webp'}
 SUPPORTED_CODE_EXTENSIONS = {'.py', '.js', '.java', '.cpp', '.c', '.go', '.rs'}
-SUPPORTED_DOC_EXTENSIONS = {'.md', '.txt', '.rst'}
+SUPPORTED_DOC_EXTENSIONS = {'.md', '.txt', '.rst', '.json'}
 
 # Prompt Parsing / 프롬프트 파싱
 SECTION_HEADERS = {

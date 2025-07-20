@@ -269,11 +269,11 @@ class ProjectOrchestrator:
         for nick, result in self.last_turn_responses.items():
             if nick != model_nickname:
                 if result.structured_data:
-                    response_text = f"--- RESPONSE FROM {nick} (STRUCTURED) ---\n"
+                    response_text = f"--- {OTHER_AI_INFO_FLAG}: {nick} (STRUCTURED) ---\n"
                     response_text += json.dumps(result.structured_data, ensure_ascii=False, indent=2)
                     response_text += "\n"
                 else:
-                    response_text = f"--- RESPONSE FROM {nick} ---\n{result.raw_text}\n"
+                    response_text = f"--- {OTHER_AI_INFO_FLAG}: {nick} ---\n{result.raw_text}\n"
                 other_responses.append(response_text)
         
         return (

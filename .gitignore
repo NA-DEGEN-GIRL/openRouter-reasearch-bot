@@ -4,6 +4,12 @@ idea.txt
 .env
 .venv
 projects/*
+prompts/code_instructions/*
+prompts/web3_projects/*
+
+code_bugfix.md
+
+!prompts/web3_projects/gte.txt
 !projects/gte/
 !projects/gte/**
 !projects/이미지_테스트/
@@ -14,6 +20,7 @@ projects/*
 !projects/이미지_테스트/**
 !projects/pdf_테스트/**
 !projects/code_개선/**
+
 model_search_result.txt
 .python-version
 test.py

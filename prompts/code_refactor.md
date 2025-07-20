@@ -2,9 +2,9 @@
 ai_orchestrator_improve
 
 ## metadata ##
-# version: 001
-AI 협업 시스템을 통해 기존 코드를 체계적으로 분석, 리팩토링, 문서화하는 5단계 최적화 워크플로우. 
-모든 단계는 명시적 Chain-of-Thought와 컨텍스트 보존을 기반으로 작동하며, 정량적 메트릭과 품질 체크리스트를 통해 검증됨.
+- version: 003
+- description: 코드를 더 나은 형태로 개선
+- details: AI 협업 시스템을 통해 기존 코드를 체계적으로 분석, 리팩토링, 문서화하는 5단계 최적화 워크플로우. 모든 단계는 명시적 Chain-of-Thought와 컨텍스트 보존을 기반으로 작동하며, 정량적 메트릭과 품질 체크리스트를 통해 검증됨.
 
 ## context ##
 # 리팩토링 원칙
@@ -72,7 +72,7 @@ AI 협업 시스템을 통해 기존 코드를 체계적으로 분석, 리팩토
 참고 url:
   OpenRouter API: https://openrouter.ai/docs/api-reference/chat-completion
 </target_info>
-
+현재 스텝: prompt1
 너의 역할: '소프트웨어 아키텍트'로서 코드를 진단하고 최종 개선 계획을 수립합니다.
 
 Chain-of-Thought 지시사항:
@@ -108,6 +108,7 @@ Chain-of-Thought 지시사항:
 ## prompt2: AI 협업 기반 마스터 플랜 확정 ##
 # reasoning
 # other_ai_info
+현재 스텝: prompt2
 **너의 역할:** '수석 아키텍트(Lead Architect)'로서 2~n개의 AI 제안을 통합하여 최종 마스터 플랜을 수립합니다.
 
 **비교 평가 템플릿:**
@@ -144,7 +145,7 @@ Chain-of-Thought 지시사항:
 
 ## prompt3: 코드 리팩토링 구현 ##
 # reasoning
-
+현재 스텝: prompt3
 너의 역할: '전문 개발자'로서 마스터 플랜을 정확히 구현합니다.
 
 Chain-of-Thought 지시사항:
@@ -170,7 +171,7 @@ Chain-of-Thought 지시사항:
 ## prompt4: 타 AI의 코드 평가 및 아이디어 병합 ##
 # reasoning
 # other_ai_info
-
+현재 스텝: prompt4
 너의 역할: '품질 보증 엔지니어'로서 여러 형태의 코드 구현을 검증하고 최종 개선합니다.
 
 다른 AI 결과 확인:
@@ -211,7 +212,7 @@ Chain-of-Thought 지시사항:
 
 ## prompt5: README.md 및 DEV.md 작성 ##
 # reasoning
-
+현재 스텝: prompt5
 너의 역할: '기술 문서 작성가'로서 프로젝트 문서를 작성합니다.
 
 문서화 원칙:
@@ -254,7 +255,7 @@ Chain-of-Thought 지시사항:
 
 ## prompt6: 개선 로드맵 제안 ##
 # reasoning
-
+현재 스텝: prompt6
 너의 역할: '프로덕트 전략가'로서 향후 개선 방향을 제안합니다.
 
 제안 카테고리:
