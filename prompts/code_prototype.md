@@ -1,5 +1,5 @@
 ## project name ##
-cryptorank_scrap
+rootdata_team
 
 ## metadata ##
 - version: 007
@@ -43,7 +43,7 @@ cryptorank_scrap
 
 ## prompt1 ##
 # reasoning
-# doc ./prompts/code_instructions/cryptorank.md
+# doc ./prompts/code_instructions/parse_rootdata.md
 첨부파일설명
  cryptorank.md: 사용자 입력 코드 명세서
 
