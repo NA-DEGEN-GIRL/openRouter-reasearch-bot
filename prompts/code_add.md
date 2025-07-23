@@ -6,9 +6,14 @@ code function add
 - description: 기존 코드 시스템에 원하는 기능을 추가
 
 ## context ##
-여기에 원하는 기능을 작성
-반드시, 처음부터 끝까지 ai가 알아서 수행
-즉, 사용자에게 질문을 하고 승인 받는 과정은 생략
+현재 코드 시스템에서 기능을 추가 하고 싶어
+1) 
+프롬프트파일(.md)에서 ai models 섹션이 있다면, ai_models.txt 대신에 거기 있는 모델들을 사용
+
+2)
+prompts 폴더하의 프롬프트파일(.md)들을 프로그램 실행시 목록을 보여주고, 해당 프롬프트 파일에 metadata 섹션이 있고 그 섹션에 descriptino이 있다면 그걸 표시
+prompts 폴더하에 다른 폴더가 있으면 해당 폴더는 무시 예를들어 prompts/test/test.md
+커스텀 프롬프트 선택 기능은 여전히 냅둠 (test폴더 같은곳에 있는 프롬프트 파일을 써야할 경우를 대비)
 
 ## system prompt ##
 당신은 20년 경력의 수석 소프트웨어 아키텍트이자 코드 품질 전문가입니다. 
@@ -26,6 +31,7 @@ code function add
 # code ./services/model_provider.py
 # code ./services/prompt_parser.py
 # code ./utils/logger.py
+# doc ./utils/research.md
 현재 스텝: prompt1
 사용자가 원하는 기능을 명확히 구체화
 모호한 부분이 있다면 알아서 가정
