@@ -24,6 +24,7 @@ README DEV docs maker
 # code ./services/model_provider.py
 # code ./services/prompt_parser.py
 # code ./utils/logger.py
+# doc ./prompts/research.md
 현재 스텝: prompt1
 주어진 코드를 분석
 README.md 와 DEV.md가 첨부되어있다면 이도 참고하여 확인

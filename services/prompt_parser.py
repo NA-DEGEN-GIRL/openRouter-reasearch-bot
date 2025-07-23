@@ -3,7 +3,7 @@ Prompt file parsing service.
 프롬프트 파일 파싱 서비스.
 """
 import re
-from typing import List, Tuple, Dict
+from typing import List, Tuple, Dict, Optional
 from pathlib import Path
 
 from core.models import Prompt
@@ -22,10 +22,45 @@ class PromptParser:
         """Initialize prompt parser / 프롬프트 파서 초기화"""
         self.logger = get_logger(self.__class__.__name__)
     
-    def parse(self, filepath: Path, loc_strings: Dict[str, str]) -> Tuple[str, str, str, List[Prompt]]:
+    @staticmethod
+    def parse_metadata(filepath: Path) -> Optional[str]:
         """
-        Parse prompt file and return project info and prompts.
-        프롬프트 파일을 파싱하고 프로젝트 정보와 프롬프트 반환.
+        Fast metadata parsing - reads only until description found
+        빠른 메타데이터 파싱 - description을 찾을 때까지만 읽기
+        """
+        try:
+            with open(filepath, 'r', encoding='utf-8') as f:
+                in_metadata = False
+                for line in f:
+                    line_stripped = line.strip()
+                    
+                    # Check for metadata section start / metadata 섹션 시작 확인
+                    if re.match(r'^##\s*metadata\s*##$', line_stripped, re.IGNORECASE):
+                        in_metadata = True
+                        continue
+                    
+                    # Exit if another section starts / 다른 섹션이 시작되면 종료
+                    if in_metadata and line_stripped.startswith('##'):
+                        break
+                    
+                    # Look for description in metadata section / metadata 섹션에서 description 찾기
+                    if in_metadata:
+                        desc_match = re.match(METADATA_DESCRIPTION_PATTERN, line_stripped)
+                        if desc_match:
+                            return desc_match.group(1).strip()
+                
+                return None
+                
+        except Exception as e:
+            # Silent fail for UI purposes / UI 목적이므로 조용히 실패
+            logger = get_logger('PromptParser')
+            logger.debug(f"Failed to parse metadata from {filepath}: {e}")
+            return None
+    
+    def parse(self, filepath: Path, loc_strings: Dict[str, str]) -> Tuple[str, str, str, List[Prompt], Optional[List[str]]]:
+        """
+        Parse prompt file and return project info, prompts, and ai models.
+        프롬프트 파일을 파싱하고 프로젝트 정보, 프롬프트, AI 모델 반환.
         """
         try:
             content = filepath.read_text(encoding='utf-8')
@@ -47,6 +82,7 @@ class PromptParser:
         system_prompt = None
         context_optional = ""
         prompts = []
+        ai_models = None
         
         for header, text in zip(headers, sections):
             clean_text = text.strip()
@@ -61,6 +97,8 @@ class PromptParser:
                 context_optional = clean_text
             elif header_lower == SECTION_HEADERS['SYSTEM_PROMPT']:
                 system_prompt = clean_text
+            elif header_lower == SECTION_HEADERS['AI_MODELS']:
+                ai_models = self._parse_ai_models(clean_text)
             elif header_lower.startswith(SECTION_HEADERS['PROMPT_PREFIX']):
                 prompt = self._parse_prompt_section(header, clean_text)
                 prompts.append(prompt)
@@ -71,7 +109,17 @@ class PromptParser:
         if not system_prompt:
             raise PromptParsingError(loc_strings["error_no_system_prompt"])
         
-        return project_name, context_optional, system_prompt, sorted(prompts, key=lambda x: x.id)
+        return project_name, context_optional, system_prompt, sorted(prompts, key=lambda x: x.id), ai_models
+    
+    def _parse_ai_models(self, content: str) -> Optional[List[str]]:
+        """Parse AI models section / AI models 섹션 파싱"""
+        models = []
+        for line in content.splitlines():
+            line = line.strip()
+            # Skip empty lines and comments / 빈 줄과 주석 건너뛰기
+            if line and not line.startswith('#'):
+                models.append(line)
+        return models if models else None
     
     def _extract_sections(self, content: str) -> Tuple[List[str], List[str]]:
         """Extract headers and sections / 헤더와 섹션 추출"""
@@ -79,7 +127,6 @@ class PromptParser:
         sections = re.split(r"##\s*.*?\s*##", content)[1:]
         return headers, sections
     
-    # REFACTORED: Reduced complexity by extracting file parsing
     def _parse_prompt_section(self, header: str, content: str) -> Prompt:
         """Parse single prompt section / 단일 프롬프트 섹션 파싱"""
         id_match = re.search(r'\d+', header)

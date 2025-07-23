@@ -6,14 +6,10 @@ code function add
 - description: 기존 코드 시스템에 원하는 기능을 추가
 
 ## context ##
-현재 코드 시스템에서 기능을 추가 하고 싶어
-1) 
-프롬프트파일(.md)에서 ai models 섹션이 있다면, ai_models.txt 대신에 거기 있는 모델들을 사용
-
-2)
-prompts 폴더하의 프롬프트파일(.md)들을 프로그램 실행시 목록을 보여주고, 해당 프롬프트 파일에 metadata 섹션이 있고 그 섹션에 descriptino이 있다면 그걸 표시
-prompts 폴더하에 다른 폴더가 있으면 해당 폴더는 무시 예를들어 prompts/test/test.md
-커스텀 프롬프트 선택 기능은 여전히 냅둠 (test폴더 같은곳에 있는 프롬프트 파일을 써야할 경우를 대비)
+현재 코드 시스템에서 아래 기능을 수정하고 싶어
+현재는 prompts 폴더하의 모든 .md가 한글이건 영어건 상관없이 나오는데
+영문으로 선택시 *_en.md 만 가져오고
+한글로 선택시 나머지를 가져오도록 수정해줘.
 
 ## system prompt ##
 당신은 20년 경력의 수석 소프트웨어 아키텍트이자 코드 품질 전문가입니다. 
@@ -31,7 +27,7 @@ prompts 폴더하에 다른 폴더가 있으면 해당 폴더는 무시 예를�
 # code ./services/model_provider.py
 # code ./services/prompt_parser.py
 # code ./utils/logger.py
-# doc ./utils/research.md
+# doc ./prompts/research.md
 현재 스텝: prompt1
 사용자가 원하는 기능을 명확히 구체화
 모호한 부분이 있다면 알아서 가정

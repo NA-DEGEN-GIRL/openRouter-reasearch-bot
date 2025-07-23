@@ -24,6 +24,8 @@ SECTION_HEADERS = {
     'PROMPT_PREFIX': 'prompt',
     'DEACTIVE_PREFIX': 'deactive',
     'CONTEXT_PREFIX': 'context',
+    'AI_MODELS': 'ai models',
+    'METADATA': 'metadata',
 }
 
 # File Commands in Prompts / 프롬프트 내 파일 명령어
@@ -59,3 +61,6 @@ LOG_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 DIVIDER_LENGTH = 80
 DIVIDER_CHAR = "="
 PROMPT_DIVIDER_CHAR = "*"
+
+METADATA_DESCRIPTION_PATTERN = r'^\s*-?\s*description\s*:\s*(.+)$'
+PRIORITY_PROMPTS = ['research.md', 'research_en.md']

@@ -44,6 +44,7 @@ class ProjectOrchestrator:
         self.prompts: List[Prompt] = []
         self.last_turn_responses: Dict[str, PromptResult] = {}
         self.context: Optional[ProjectContext] = None
+        self.prompt_models: Optional[List[str]] = None
     
     async def run(self) -> None:
         """Main execution method / 메인 실행 메서드"""
@@ -64,12 +65,17 @@ class ProjectOrchestrator:
         """Initialize project from prompt file / 프롬프트 파일에서 프로젝트 초기화"""
         self.logger.info("Initializing project from prompt file")
 
-        project_name, context_optional, system_prompt, prompts = self.prompt_parser.parse(
+        # Parse with ai_models support / ai_models 지원으로 파싱
+        project_name, context_optional, system_prompt, prompts, ai_models = self.prompt_parser.parse(
             self.config.prompt_filepath,
             self.loc_strings
         )
         
-        # REFACTORED: Create immutable ProjectContext
+        # Store prompt-specific models / 프롬프트 특정 모델 저장
+        self.prompt_models = ai_models
+        self.logger.info(f"Prompt models found: {ai_models}")
+        
+        # Create project context / 프로젝트 컨텍스트 생성
         folder_name = re.sub(r'[^\w-]', '_', project_name).lower()
         output_dir = Path(OUTPUT_DIR_PREFIX) / folder_name
         live_log_dir = output_dir / LIVE_LOG_DIR_NAME
@@ -99,14 +105,18 @@ class ProjectOrchestrator:
         
         model_data = await self.model_provider.get_model_data(self.loc_strings)
         
-        for model_id in self.config.ai_models:
+        # Use prompt models if available / 프롬프트 모델이 있으면 사용
+        models_to_use = self.prompt_models if self.prompt_models else self.config.ai_models
+        self.logger.info(f"Using models: {models_to_use}")
+        
+        for model_id in models_to_use:
             model_info = ModelInfo(
                 model_id=model_id,
                 nickname=model_id.split('/')[-1],
                 max_completion_tokens=model_data.get(model_id, {}).get('max_completion_tokens')
             )
             
-            # REFACTORED: Pass system_prompt through modified Config
+            # Create modified config / 수정된 설정 생성
             modified_config = Config(
                 language=self.config.language,
                 prompt_filepath=self.config.prompt_filepath,
@@ -141,7 +151,6 @@ class ProjectOrchestrator:
         for i, prompt in enumerate(self.prompts):
             await self._execute_single_prompt(prompt, i)
     
-    # REFACTORED: Simplified by delegating file I/O
     async def _execute_single_prompt(self, prompt: Prompt, index: int) -> None:
         """Execute a single prompt / 단일 프롬프트 실행"""
         is_last_prompt = (index == len(self.prompts) - 1)
@@ -166,7 +175,6 @@ class ProjectOrchestrator:
         
         print(self.loc_strings["prompt_finished"].format(prompt_id=prompt.id))
     
-    # REFACTORED: Reduced complexity and separated concerns
     async def _execute_prompt_parallel(self, prompt: Prompt, index: int, is_last: bool) -> Dict[str, PromptResult]:
         """Execute prompt for all models in parallel / 모든 모델에 대해 병렬로 프롬프트 실행"""
         current_responses = {}
@@ -253,7 +261,6 @@ class ProjectOrchestrator:
                 error=e
             )
     
-    # REFACTORED: Support structured data in collaboration
     def _prepare_user_content(self, prompt: Prompt, index: int, model_nickname: str) -> str:
         """Prepare user content / 사용자 콘텐츠 준비"""
         if index == 0:

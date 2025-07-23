@@ -103,7 +103,7 @@ python main.py --pdf-engine mistral-ocr
    - `# code: path/to/script.py` - 코드 파일 첨부
    - `# doc: path/to/readme.md` - 문서 파일 첨부
 
-### 기본 예시: research.md
+### 예시: research.md
 
 `prompts/research.md`는 프로젝트 분석을 위한 기본 템플릿입니다:
 
@@ -111,22 +111,47 @@ python main.py --pdf-engine mistral-ocr
 ## project name ##
 GTE
 
+## metadata ##
+- version: 001
+- description: web3 프로젝트에 대한 조사
+
 ## system prompt ##
-당신은 전문 블록체인 프로젝트 분석가입니다...
+당신은 전문 블록체인 프로젝트 분석가입니다. 반드시 웹 검색을 통해 가장 정확한 최신 정보를 찾아야 합니다.
 
 ## prompt1: 심층 분석 및 보고 ##
 # reasoning
-**project info**
-GTE
-• 한 줄 소개: Decentralized trading platform
-• Tag: DeFi, DEX
-• web: https://www.gte.xyz/
+# doc ./prompts/web3_projects/gte.md
+현재단계: prompt1
+project info: 첨부된 파일 (.md 혹은 .txt 파일)
+main request: **project info** 프로젝트에 대한 조사
 ...
-**end of project info**
 ```
 
 이 예시를 사용하려면:
-1. `**project info**`와 `**end of project info**` 사이의 내용을 분석하려는 프로젝트 정보로 교체
+1. doc 을 분석하려는 프로젝트 정보로 교체
+
+   `gte.md` 파일 예시
+   ```
+   GTE
+   • 한 줄 소개: Decentralized trading platform
+   • Tag: DeFi, DEX, OrderBook DEX
+   • web: https://www.gte.xyz/
+   • X: https://x.com/gte_xyz
+   💰 총 투자액: $25,000,000
+   👑 Tier 1 투자자:
+     - Paradigm
+   🥂 Tier 2 투자자:
+     - Robot Ventures, Wintermute
+   🔹 기타 투자자:
+     - Flow Traders, Guy Young, IMC Trading, Maven 11, Max Resnick
+   Rootdata (https://www.rootdata.com/Projects/detail/GTE?k=MTQ4ODc=)
+   팀원정보
+   founder: https://x.com/0xBurbo
+   co-founder: https://x.com/mlunghi2000
+   co-founder: https://x.com/moses_gte
+   co-founder: https://x.com/enzo_gte
+   ```
+
 2. 프로젝트 이름, 웹사이트, 투자자 정보 등을 입력
 3. `python main.py` 실행
 
@@ -167,19 +192,17 @@ A: 파일 경로가 정확한지, 파일이 존재하는지 확인하세요. 상
 ### Q: 메모리 부족 오류가 발생합니다
 A: 동시에 실행하는 모델 수를 줄이거나, 더 작은 모델을 사용하세요.
 
----
-
 # AI-Forge: AI Workflow Orchestrator
 
-A framework that executes multiple AI models concurrently and automates complex AI collaboration workflows with a single prompt file.
+A framework for running multiple AI models simultaneously and automating complex AI collaboration workflows with a single prompt file.
 
 ## Key Features
 
-- **Parallel Multi-AI Processing**: Execute the same task across multiple AI models simultaneously to reduce processing time
-- **Prompt-Driven Workflow**: Define entire workflows using markdown files
-- **AI Collaboration**: Enhance results by allowing AIs to reference responses from previous steps
-- **Multimodal Input**: Pass images, PDFs, code, and documents directly to AI
-- **Real-time Log Monitoring**: Track each AI's progress in real-time
+- **Multi-AI Parallel Processing**: Request the same task to multiple AI models simultaneously to reduce processing time
+- **Prompt-Based Workflow**: Define entire work flows using markdown files
+- **AI Collaboration**: Reference previous AI responses in subsequent steps to improve results
+- **Multimodal Input**: Directly send images, PDFs, code, and document files to AI
+- **Real-time Log Monitoring**: Monitor each AI's work progress in real-time
 
 ## Installation Guide
 
@@ -189,7 +212,7 @@ git clone https://github.com/your-username/ai-forge.git
 cd ai-forge
 ```
 
-### 2. Set Up Python Virtual Environment (Recommended)
+### 2. Python Virtual Environment Setup (Recommended)
 ```bash
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
@@ -202,18 +225,18 @@ venv\Scripts\activate  # Windows
 pip install -r requirements.txt
 ```
 
-### 4. Configure Environment
+### 4. Environment Configuration
 ```bash
 cp .env.example .env
 ```
 
-Open `.env` file and enter your OpenRouter API key:
+Open the `.env` file and enter your OpenRouter API key:
 ```
 OPENROUTER_API_KEY=your_api_key_here
 ```
 
-### 5. Configure AI Models
-Add models to `ai_models.txt`, one per line:
+### 5. AI Model Configuration
+Add the models you want to use in the `ai_models.txt` file, one per line:
 ```
 google/gemini-2.0-flash-thinking-exp:free
 anthropic/claude-3.5-sonnet
@@ -227,13 +250,13 @@ openai/gpt-4-turbo
 python main.py
 ```
 
-When executed, you'll see:
+Running this will display the following selection screen:
 1. Language selection (Korean/English)
-2. Bot mode selection (Standard research bot/Custom prompt)
+2. Bot mode selection (Standard Research Bot/Custom Prompt)
 
 ### Command Line Options
 ```bash
-# Specify language and prompt file directly
+# Directly specify language and prompt file
 python main.py --lang en --prompt my_custom.md
 
 # Disable AI collaboration
@@ -243,9 +266,9 @@ python main.py --no-collaboration
 python main.py --pdf-engine mistral-ocr
 ```
 
-### Writing Prompt Files
+### How to Write Prompt Files
 
-Prompt files should be written as `.md` files in the `prompts/` folder.
+Prompt files are written as `.md` files in the `prompts/` folder.
 
 #### Basic Structure
 ```markdown
@@ -264,50 +287,75 @@ Collect and analyze basic information about the project.
 Perform in-depth analysis based on previous analysis.
 ```
 
-#### Special Tags
+#### Special Tags Explained
 
-1. **`# reasoning`**: Records AI's thinking process in logs
-2. **`# other_ai_info`**: References other AI responses from previous steps
-3. **File Attachment Tags**:
+1. **`# reasoning`**: Record AI's thought process in logs
+2. **`# other_ai_info`**: Reference previous AI responses from other steps
+3. **File attachment tags**:
    - `# img: path/to/image.jpg` - Attach image
    - `# pdf: path/to/document.pdf` - Attach PDF
    - `# code: path/to/script.py` - Attach code file
    - `# doc: path/to/readme.md` - Attach document file
 
-### Default Example: research.md
+### Example: research.md
 
-`prompts/research.md` is the default template for project analysis:
+`prompts/research.md` is a basic template for project analysis:
 
 ```markdown
 ## project name ##
 GTE
 
-## system prompt ##
-You are a professional blockchain project analyst...
+## metadata ##
+- version: 001
+- description: Research on web3 project
 
-## prompt1: In-depth Analysis and Report ##
+## system prompt ##
+You are a professional blockchain project analyst. You must find the most accurate and up-to-date information through web searches.
+
+## prompt1: In-depth Analysis and Reporting ##
 # reasoning
-**project info**
-GTE
-• One-liner: Decentralized trading platform
-• Tag: DeFi, DEX
-• web: https://www.gte.xyz/
+# doc ./prompts/web3_projects/gte.md
+Current stage: prompt1
+project info: Attached file (.md or .txt file)
+main request: Research on **project info** project
 ...
-**end of project info**
 ```
 
 To use this example:
-1. Replace content between `**project info**` and `**end of project info**` with your project's information
+1. Replace the doc with project information you want to analyze
+
+   Example `gte.md` file:
+   ```
+   GTE
+   • One-line description: Decentralized trading platform
+   • Tag: DeFi, DEX, OrderBook DEX
+   • web: https://www.gte.xyz/
+   • X: https://x.com/gte_xyz
+   💰 Total Investment: $25,000,000
+   👑 Tier 1 Investors:
+     - Paradigm
+   🥂 Tier 2 Investors:
+     - Robot Ventures, Wintermute
+   🔹 Other Investors:
+     - Flow Traders, Guy Young, IMC Trading, Maven 11, Max Resnick
+   Rootdata (https://www.rootdata.com/Projects/detail/GTE?k=MTQ4ODc=)
+   Team Information
+   founder: https://x.com/0xBurbo
+   co-founder: https://x.com/mlunghi2000
+   co-founder: https://x.com/moses_gte
+   co-founder: https://x.com/enzo_gte
+   ```
+
 2. Enter project name, website, investor information, etc.
 3. Run `python main.py`
 
 ### Output Results
 
-Upon completion, the following files are created in `projects/project_name/`:
-- `p1_modelname.md`: First prompt results
-- `p2_modelname.md`: Second prompt results
-- `final_modelname.md`: Final results
-- `live_logs/modelname.log`: Real-time processing logs
+Upon completion, the following files will be generated in the `projects/ProjectName/` folder:
+- `p1_ModelName.md`: First prompt results
+- `p2_ModelName.md`: Second prompt results
+- `final_ModelName.md`: Final results
+- `live_logs/ModelName.log`: Real-time processing logs
 
 ## Dependencies and Requirements
 
@@ -322,18 +370,18 @@ Upon completion, the following files are created in `projects/project_name/`:
 
 ### API Requirements
 - OpenRouter API key required
-- Internet connection required
+- Internet connection essential
 
 ## Troubleshooting (FAQ)
 
-### Q: I'm getting API key errors
-A: Ensure `OPENROUTER_API_KEY` is correctly set in your `.env` file.
+### Q: API key error occurs
+A: Check if `OPENROUTER_API_KEY` is correctly set in the `.env` file.
 
-### Q: A specific model isn't working
-A: Verify the model ID in `ai_models.txt` is correct. Check OpenRouter's supported models list.
+### Q: A specific model doesn't work
+A: Verify that the model ID in `ai_models.txt` is correct. Check the list of models supported by [OpenRouter]([openrouter.ai](https://openrouter.ai/)).
 
-### Q: File attachments aren't working
-A: Check that file paths are correct and files exist. Relative paths are based on project root.
+### Q: File attachment doesn't work
+A: Check if the file path is correct and the file exists. Relative paths are based on the project root.
 
-### Q: I'm getting out of memory errors
-A: Reduce the number of concurrent models or use smaller models.
+### Q: Memory shortage error occurs
+A: Reduce the number of models running simultaneously or use smaller models.

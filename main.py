@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Main entry point for the AI research bot.
 AI 연구 봇의 메인 진입점.
@@ -7,13 +6,15 @@ import sys
 import asyncio
 import argparse
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List, Tuple
 
 from config.config import Config
+from config.constants import PRIORITY_PROMPTS
 from core.orchestrator import ProjectOrchestrator
 from core.exceptions import ConfigurationError, ProjectError
 from utils.logger import setup_logger
 from localization import STRINGS
+from services.prompt_parser import PromptParser
 
 
 def parse_arguments() -> argparse.Namespace:
@@ -59,22 +60,102 @@ def select_language() -> str:
             print(STRINGS['en']["invalid_input"])
 
 
+def get_prompt_files(prompts_dir: Path, lang: str = None) -> List[Tuple[Path, Optional[str]]]:
+    """
+    Get list of prompt files with descriptions
+    프롬프트 파일 목록과 설명 가져오기
+    
+    Args:
+        prompts_dir: Prompts directory path
+        lang: Language filter ('en' for English, 'ko' for Korean)
+    """
+    prompt_files = []
+    
+    # Scan only root level .md files / 루트 레벨 .md 파일만 스캔
+    for filepath in prompts_dir.glob('*.md'):
+        if filepath.is_file():
+            filename = filepath.name
+            
+            # Language filtering / 언어 필터링
+            if lang == 'en':
+                # English: only files ending with _en.md
+                if not filename.endswith('_en.md'):
+                    continue
+            elif lang == 'ko':
+                # Korean: exclude files ending with _en.md
+                if filename.endswith('_en.md'):
+                    continue
+            
+            description = PromptParser.parse_metadata(filepath)
+            prompt_files.append((filepath, description))
+    
+    # Sort: priority files first, then alphabetical / 정렬: 우선순위 파일 먼저, 그 다음 알파벳순
+    def sort_key(item):
+        filename = item[0].name
+        if filename in PRIORITY_PROMPTS:
+            return (0, PRIORITY_PROMPTS.index(filename))
+        else:
+            return (1, filename.lower())
+    
+    prompt_files.sort(key=sort_key)
+    
+    return prompt_files
+
+
 def select_prompt_file(lang: str) -> Path:
     """Interactive prompt file selection / 대화형 프롬프트 파일 선택"""
     loc_strings = STRINGS[lang]
-    print(loc_strings["select_bot"])
-    print(f"  {loc_strings['bot_option_research']}")
-    print(f"  {loc_strings['bot_option_custom']}")
+    prompts_dir = Path('prompts')
     
+    # Check prompts directory / prompts 디렉토리 확인
+    if not prompts_dir.exists() or not prompts_dir.is_dir():
+        print(loc_strings["prompts_dir_not_found"])
+        sys.exit(1)
+    
+    # Get prompt files list with language filter / 언어 필터와 함께 프롬프트 파일 목록 가져오기
+    prompt_files = get_prompt_files(prompts_dir, lang)
+    
+    if not prompt_files:
+        print(loc_strings["no_prompts_found"])
+        print("Switching to custom prompt input mode...")
+        filename = input(loc_strings['enter_prompt_filename'])
+        return Path('prompts') / filename
+    
+    # Display menu with better formatting / 더 나은 형식으로 메뉴 표시
+    print(f"\n{loc_strings['select_bot']}")
+    print("\n" + "=" * 60)
+    print(f"{'#':<4} {loc_strings['file_column']:<25} {loc_strings['description_column']}")
+    print("=" * 60)
+    
+    for i, (filepath, description) in enumerate(prompt_files, 1):
+        filename = filepath.name
+        desc_text = description if description else loc_strings["no_description"]
+        # Truncate long descriptions / 긴 설명 자르기
+        if len(desc_text) > 50:
+            desc_text = desc_text[:47] + "..."
+        print(f"{i:<4} {filename:<25} {desc_text}")
+    
+    print("-" * 60)
+    print(f"{'C':<4} {loc_strings['bot_option_custom']:<25} {loc_strings['custom_file_path']}")
+    print("=" * 60)
+    
+    # Handle user input / 사용자 입력 처리
     while True:
-        choice = input(f"\n번호를 입력하세요 (1-2): ")
-        if choice == '1':
-            filename = 'research_en.md' if lang == 'en' else 'research.md'
-            return Path('prompts') / filename
-        elif choice == '2':
+        choice = input(loc_strings["select_prompt_message"].format(
+            num_options=len(prompt_files)
+        )).strip().upper()
+        
+        if choice == 'C':
             filename = input(loc_strings['enter_prompt_filename'])
             return Path('prompts') / filename
-        else:
+        
+        try:
+            index = int(choice) - 1
+            if 0 <= index < len(prompt_files):
+                return prompt_files[index][0]
+            else:
+                print(loc_strings["invalid_input"])
+        except ValueError:
             print(loc_strings["invalid_input"])
 
 
