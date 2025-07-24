@@ -1,6 +1,11 @@
 ## project name ##
 GTE
 
+## ai models ##
+x-ai/grok-4
+openai/gpt-4.1
+google/gemini-2.5-pro
+
 ## metadata ##
 - version: 001
 - description: web3 프로젝트에 대한 조사
