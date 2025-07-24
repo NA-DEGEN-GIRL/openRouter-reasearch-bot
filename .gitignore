@@ -41,3 +41,5 @@ model_cache.json
 openRouter-docs/
 *.log
 batch_logs/
+research_batch.md
+**_temp_**
