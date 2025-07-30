@@ -11,7 +11,6 @@
 ./prompts/web3_projects/questflow.txt
 ./prompts/web3_projects/remix.txt
 ./prompts/web3_projects/sidekick.txt
-./prompts/web3_projects/trends copy.txt
 ./prompts/web3_projects/trends.txt
 ./prompts/web3_projects/velvet_capital.txt
 ./prompts/web3_projects/w3.io.txt
